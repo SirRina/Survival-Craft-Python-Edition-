@@ -6,6 +6,7 @@ SPLIT       = 0; # 0 false 1 true;
 SPLIT_COLOR = [255, 0, 255];
 SPLIT_SIZE  = 4; # Tamanho da bolakk
 
+
 class OverlayManager:
 	def __init__(self, CURRENT_OPENGL, main):
 		self.GL11 = CURRENT_OPENGL;
@@ -31,3 +32,5 @@ class OverlayManager:
 			GL11.glDisable(GL11.GL_POINT_SMOOTH);
 
 			GL11.glPopMatrix();
+
+		

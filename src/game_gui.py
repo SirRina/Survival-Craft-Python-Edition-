@@ -21,7 +21,7 @@ class GamePaused(guiscreen.GUI):
 
 	def opened(self):
 		overlay.SPLIT = 0;
-
+		
 		self.main.camera_manager.focused = False;
 
 	def on_click_up(self, button):
