@@ -6,7 +6,7 @@ SPLIT       = 0; # 0 false 1 true;
 SPLIT_COLOR = [255, 0, 255];
 SPLIT_SIZE  = 4; # Tamanho da bolakk
 
-FPS = 1;
+DEVELOPER = 1;
 
 class OverlayManager:
 	def __init__(self, CURRENT_OPENGL, main):
@@ -34,5 +34,8 @@ class OverlayManager:
 
 			GL11.glPopMatrix();
 
-		if (FPS):
-			self.main.font_renderer.draw("FPS: " + str(int(self.main.clock.get_fps())), 10, 10, [0, 0, 0]);
+		if (DEVELOPER):
+			height = self.main.font_renderer.get_height();
+
+			self.main.font_renderer.draw("FPS: " + str(int(self.main.clock.get_fps())), 10, height * 1, [0, 0, 0]);
+			self.main.font_renderer.draw("POS: " + str(int(self.main.camera_manager.position.x)) + " " + str(int(self.main.camera_manager.position.y)) + " " + str(int(self.main.camera_manager.position.z)), 10, (height + 1) * 2, [0, 0, 0]);
