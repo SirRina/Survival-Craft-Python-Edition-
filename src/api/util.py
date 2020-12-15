@@ -32,6 +32,14 @@ class Vec:
 	def length(self):
 		return sqrt(self.x * self.x + self.y + self.z * self.z);
 
+	def collide(self, x, y, z):
+		if self.x >= x + 1 and self.x - 1 <= x and \
+		   self.y >= y + 1 and self.y - 1 <= y and \
+		   self.z >= z + 1 and self.y - 1 <= z:
+		   	return True;
+
+		return False;
+
 	def __add__(self, num):
 		if type(num) is Vec:
 			return Vec(self.x + num.x, self.y + num.y, self.z + num.z);

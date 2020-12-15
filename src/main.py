@@ -199,6 +199,9 @@ class Main:
 		color(0, 0, 255);
 		render_polgyn(0, 2, -10, MASK_BLOCK);
 
+		if self.camera_manager.position.collide(0, 2, -10):
+			print("nigga")
+
 	def render_2D(self):
 		self.overlay_manager.on_render();
 		self.gui_manager.update_render();
