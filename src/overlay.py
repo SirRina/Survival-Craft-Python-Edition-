@@ -6,6 +6,7 @@ SPLIT       = 0; # 0 false 1 true;
 SPLIT_COLOR = [255, 0, 255];
 SPLIT_SIZE  = 4; # Tamanho da bolakk
 
+FPS = 1;
 
 class OverlayManager:
 	def __init__(self, CURRENT_OPENGL, main):
@@ -33,4 +34,5 @@ class OverlayManager:
 
 			GL11.glPopMatrix();
 
-		
+		if (FPS):
+			self.main.font_renderer.draw("" + str(self.main.partial_ticks), 10, 10, [0, 0, 0])
