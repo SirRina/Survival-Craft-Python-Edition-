@@ -62,12 +62,12 @@ class Camera:
 				self.position.z -= self.calcule_z_from_angle(self.yaw) * camera_speed;
 
 			if keys[pygame.K_a]:
-				self.position.x -= 1 * self.calcule_x_from_angle(self.yaw - 90) * camera_speed;
-				self.position.z -= 1 * self.calcule_z_from_angle(self.yaw - 90) * camera_speed;
+				self.position.x -= 0.5 * self.calcule_x_from_angle(self.yaw - 90) * camera_speed;
+				self.position.z -= 0.5 * self.calcule_z_from_angle(self.yaw - 90) * camera_speed;
 
 			if keys[pygame.K_d]:
-				self.position.x += 1 * self.calcule_x_from_angle(self.yaw - 90) * camera_speed;
-				self.position.z += 1 * self.calcule_z_from_angle(self.yaw - 90) * camera_speed;
+				self.position.x += 0.5 * self.calcule_x_from_angle(self.yaw - 90) * camera_speed;
+				self.position.z += 0.5 * self.calcule_z_from_angle(self.yaw - 90) * camera_speed;
 
 			if keys[pygame.K_SPACE]:
 				self.position.y -= camera_speed;
