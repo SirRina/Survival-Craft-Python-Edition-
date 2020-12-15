@@ -13,6 +13,8 @@ class GamePaused(guiscreen.GUI):
 		self.main = main;
 
 	def closed(self):
+		pygame.mouse.set_pos(self.main.screen_width / 2, self.main.screen_height / 2);
+
 		self.main.camera_manager.focused = True;
 	
 		overlay.SPLIT = 1;

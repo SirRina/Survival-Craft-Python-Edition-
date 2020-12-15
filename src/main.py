@@ -134,6 +134,8 @@ class Main:
 
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 
+			self.render_3D();
+
 			GL11.glPushMatrix();
 
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
@@ -161,8 +163,6 @@ class Main:
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 	
 			GL11.glPopMatrix();
-
-			self.render_3D();
 
 			pygame.display.flip();
 
