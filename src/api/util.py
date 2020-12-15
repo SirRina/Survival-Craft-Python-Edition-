@@ -82,6 +82,20 @@ class CustomTextRender(object):
 		except:
 			self.cfont = pygame.font.Font(self.path, self.size);
 
+	def get_width(self, string):
+		surface_text = self.cfont.render(text, 1, (color), False);
+		
+		width, height = surface_text.get_size();
+
+		return width;
+
+	def get_height(self, string):
+		surface_text = self.cfont.render(text, 1, (color), False);
+
+		width, height = surface_text.get_size();
+
+		return height;
+
 	def draw(self, text, x, y, color):
 		surface_text = self.cfont.render(text, 1, (color), False);
 	
