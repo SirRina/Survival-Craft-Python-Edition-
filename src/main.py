@@ -5,7 +5,7 @@
 #
 
 from api.libs import GL as GL11, pygame, GLU;
-from api.util import Render, lerp, Vec, CustomTextRender, clamp;
+from api.util import lerp, Vec, CustomTextRender, clamp;
 
 import math;
 
@@ -20,8 +20,6 @@ VERSION = "0.0.1";
 
 SHOW_VERSION = True;
 START        = True;
-
-RENDER = Render("0.0.1");
 
 MASK_BLOCK = [
 	[0, 0, 0],
@@ -70,6 +68,8 @@ def render_polgyn(x, y, z, vertex_list):
 
 	GL11.glEnd();
 
+	GL11.glDisable(GL11.GL_BLEND);
+
 	GL11.glPopMatrix();
 
 def color(r, g, b, a = 255):
@@ -104,15 +104,6 @@ class Main:
 
 		self.GL11 = GL11;
 
-		GL11.glViewport(0, 0, self.screen_width, self.screen_height);
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-
-		GLU.gluPerspective(self.fov, (self.screen_width / self.screen_height), 0.1, self.fog);
-
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glLoadIdentity();
-
 		self.camera_manager  = camera.Camera(self, False);
 		self.overlay_manager = overlay.OverlayManager(CURRENT_OPENGL = GL11, main = self);
 		self.gui_manager     = guiscreen.GUIManager();
@@ -141,9 +132,11 @@ class Main:
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 			GL11.glClearColor(0.5, 0.5, 0.5, 0.5);
 
-			self.render_3D();
+			GL11.glEnable(GL11.GL_DEPTH_TEST);
 
 			GL11.glPushMatrix();
+
+			GL11.glDisable(GL11.GL_DEPTH_TEST);
 
 			GL11.glViewport(0, 0, self.screen_width, self.screen_height);
 			GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -164,8 +157,12 @@ class Main:
 	
 			GL11.glMatrixMode(GL11.GL_MODELVIEW);
 			GL11.glLoadIdentity();
+
+			GL11.glEnable(GL11.GL_DEPTH_TEST);
 	
 			GL11.glPopMatrix();
+
+			self.render_3D();
 
 			pygame.display.flip();
 
@@ -191,16 +188,19 @@ class Main:
 		keys = pygame.key.get_pressed();
 
 	def render_3D(self):
+		self.camera_manager.update_camera(0.1, self.screen_width, self.screen_height);
+
 		color(255, 0, 0);
 		render_polgyn(0, 0, -10, MASK_BLOCK);
 
 		color(0, 255, 0);
-		render_polgyn(0, 0, -20, MASK_BLOCK);
+		render_polgyn(0, 1, -10, MASK_BLOCK);
 
 		color(0, 0, 255);
-		render_polgyn(0, 0, -40, MASK_BLOCK);
+		render_polgyn(0, 2, -10, MASK_BLOCK);
 
-		self.camera_manager.update_camera(0.1, self.screen_width, self.screen_height);
+		if self.camera_manager.position.collide(0, 2, -10):
+			print("nigga")
 
 	def render_2D(self):
 		self.overlay_manager.on_render();

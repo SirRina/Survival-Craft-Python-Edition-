@@ -11,62 +11,6 @@ import OpenGL.GLU as GLU;
 
 from math import sqrt;
 
-class Render:
-	def __init__(self, version):
-		print(version);
-
-	def color(self, r, g, b, a = 255):
-		GL.glColor(r / 255, g / 255, b / 255, a / 255);
-
-	def clear_color(self, r, g, b, a = 255):
-		GL.glClearColor(r / 255, g / 255, b / 255, a / 255);
-
-	def enable_state(self, gl_state):
-		GL.glEnable(gl_state);
-
-	def disable_state(self, gl_state):
-		GL.glDisable(gl_state);
-
-	def blend_func(self, a, b):
-		GL.glBlendFunc(a, b);
-
-	def enable_blend(self):
-		self.enable_state(GL.GL_BLEND);
-		self.blend_func(GL.GL_SRC_ALPHA, 771);
-
-	def disable_blend(self):
-		self.disable_state(GL.GL_BLEND);
-
-	def push_matrix(self):
-		GL.glPushMatrix();
-
-	def pop_matrix(self):
-		GL.glPopMatrix();
-
-	def matrix_mode(self, matrix_mode):
-		GL.glMatrixMode(matrix_mode);
-
-	def set_perspective(self, w, h, fov, chunk):
-		GLU.gluPerspective(fov, (w / h), 0.1, chunk);
-
-	def camera(self, x, y, z, look_at_x, look_at_y, look_at_z):
-		GLU.gluLookAt(x, y, z, look_at_x, look_at_y, look_at_z, 0, 1, 0);
-
-	def load_identity(self):
-		GL.glLoadIdentity();
-
-	def prepare(self, gl_type):
-		GL.glBegin(gl_type);
-
-	def release(self):
-		GL.glEnd();
-
-	def vertex(self, x, y, z):
-		GL.glVertex(x, y, z);
-
-	def texture(self, s, t):
-		GL.glTexCoord(s, t);
-
 class Vec:
 	def __init__(self, x, y, z):
 		self.x = x;
@@ -87,6 +31,14 @@ class Vec:
 
 	def length(self):
 		return sqrt(self.x * self.x + self.y + self.z * self.z);
+
+	def collide(self, x, y, z):
+		if self.x >= x + 1 and self.x - 1 <= x and \
+		   self.y >= y + 1 and self.y - 1 <= y and \
+		   self.z >= z + 1 and self.y - 1 <= z:
+		   	return True;
+
+		return False;
 
 	def __add__(self, num):
 		if type(num) is Vec:
