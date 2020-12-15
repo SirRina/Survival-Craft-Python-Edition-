@@ -50,30 +50,27 @@ class Camera:
 		keys = pygame.key.get_pressed();
 		rel  = pygame.mouse.get_rel();
 
-		camera_speed = 2.5 * delta_time;
+		forward_speed  = 0.5 * delta_time;
+		backward_speed = 0.4 * delta_time;
+
+		strafe_speed = 0.4 * delta_time;
 
 		if self.focused:
 			if keys[pygame.K_w]:
-				self.position.x += self.calcule_x_from_angle(self.yaw) * camera_speed;
-				self.position.z += self.calcule_z_from_angle(self.yaw) * camera_speed;
+				self.position.x += self.calcule_x_from_angle(self.yaw) * forward_speed;
+				self.position.z += self.calcule_z_from_angle(self.yaw) * forward_speed;
 
 			if keys[pygame.K_s]:
-				self.position.x -= self.calcule_x_from_angle(self.yaw) * camera_speed;
-				self.position.z -= self.calcule_z_from_angle(self.yaw) * camera_speed;
+				self.position.x -= self.calcule_x_from_angle(self.yaw) * backward_speed;
+				self.position.z -= self.calcule_z_from_angle(self.yaw) * backward_speed;
 
 			if keys[pygame.K_a]:
-				self.position.x -= 0.5 * self.calcule_x_from_angle(self.yaw - 90) * camera_speed;
-				self.position.z -= 0.5 * self.calcule_z_from_angle(self.yaw - 90) * camera_speed;
+				self.position.x -= strafe_speed * self.calcule_x_from_angle(self.yaw - 90);
+				self.position.z -= strafe_speed * self.calcule_z_from_angle(self.yaw - 90);
 
 			if keys[pygame.K_d]:
-				self.position.x += 0.5 * self.calcule_x_from_angle(self.yaw - 90) * camera_speed;
-				self.position.z += 0.5 * self.calcule_z_from_angle(self.yaw - 90) * camera_speed;
-
-			if keys[pygame.K_SPACE]:
-				self.position.y -= camera_speed;
-
-			if keys[pygame.K_LSHIFT]:
-				self.position.y += camera_speed;
+				self.position.x += strafe_speed * self.calcule_x_from_angle(self.yaw - 90);
+				self.position.z += strafe_speed * self.calcule_z_from_angle(self.yaw - 90);
 
 			self.set_yaw(  (rel[0]) * self.MOUSE_SENSIVITY);
 			self.set_pitch((rel[1]) * self.MOUSE_SENSIVITY);

@@ -17,12 +17,12 @@ class GamePaused(guiscreen.GUI):
 
 		self.main.camera_manager.focused = True;
 	
-		overlay.SPLIT = 1;
-		overlay.FPS   = 1;
+		overlay.SPLIT     = 1;
+		overlay.DEVELOPER = 1;
 
 	def opened(self):
-		overlay.SPLIT = 0;
-		overlay.FPS   = 0;
+		overlay.SPLIT     = 0;
+		overlay.DEVELOPER = 0;
 
 		self.main.camera_manager.focused = False;
 
