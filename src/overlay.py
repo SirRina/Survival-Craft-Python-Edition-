@@ -35,4 +35,4 @@ class OverlayManager:
 			GL11.glPopMatrix();
 
 		if (FPS):
-			self.main.font_renderer.draw("fps: " + str(int(self.main.clock.get_fps())), 10, 10, [0, 0, 0]);
+			self.main.font_renderer.draw("FPS: " + str(int(self.main.clock.get_fps())), 10, 10, [0, 0, 0]);
