@@ -124,7 +124,7 @@ class Main:
 
 		while (True):
 			self.partial_ticks   = self.clock.tick() / self.fps;
-			self.delta_time      = self.partial_ticks;
+			self.delta_time      = self.partial_ticks - self.last_delta_time;
 			self.last_delta_time = self.partial_ticks; 
 
 			self.update_event();
