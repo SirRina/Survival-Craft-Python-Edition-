@@ -50,7 +50,7 @@ class Camera:
 		keys = pygame.key.get_pressed();
 		rel  = pygame.mouse.get_rel();
 
-		camera_speed = 2.5 * delta_time;
+		camera_speed = 0.5 * delta_time;
 
 		if self.focused:
 			if keys[pygame.K_w]:
