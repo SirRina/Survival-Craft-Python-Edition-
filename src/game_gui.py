@@ -18,9 +18,11 @@ class GamePaused(guiscreen.GUI):
 		self.main.camera_manager.focused = True;
 	
 		overlay.SPLIT = 1;
+		overlay.FPS   = 1;
 
 	def opened(self):
 		overlay.SPLIT = 0;
+		overlay.FPS   = 0;
 
 		self.main.camera_manager.focused = False;
 
@@ -31,4 +33,4 @@ class GamePaused(guiscreen.GUI):
 	def on_render(self):
 		text = "Game Paused";
 
-		self.main.font_renderer.draw(text, self.main.screen_width / 2 - self.main.font_renderer.get_width(text) / 2, self.main.screen_height / 2, [255, 0, 255]);
+		self.main.font_renderer.draw(text, self.main.screen_width / 2 - self.main.font_renderer.get_width(text) / 2, self.main.screen_height / 2, [0, 0, 0]);

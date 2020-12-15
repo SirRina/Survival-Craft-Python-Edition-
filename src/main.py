@@ -109,9 +109,9 @@ class Main:
 		self.gui_manager     = guiscreen.GUIManager();
 
 		self.clock = pygame.time.Clock();
-		self.fps   = 60; # locked;
+		self.fps   = 75; # locked;
 
-		self.font_renderer = CustomTextRender("Tahoma", 19);
+		self.font_renderer = CustomTextRender("Arial", 19);
 
 		self.partial_ticks   = self.clock.tick() / self.fps;
 		self.last_delta_time = self.partial_ticks;
@@ -123,9 +123,11 @@ class Main:
 		self.gui_manager.add(game_gui.GamePaused(self));
 
 		while (True):
+			self.clock.tick(self.fps);
+
 			self.partial_ticks   = self.clock.tick() / self.fps;
 			self.delta_time      = self.partial_ticks - self.last_delta_time;
-			self.last_delta_time = self.partial_ticks; 
+			self.last_delta_time = self.partial_ticks;
 
 			self.update_event();
 
