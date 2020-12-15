@@ -27,4 +27,6 @@ class GamePaused(guiscreen.GUI):
 			self.close();
 
 	def on_render(self):
-		self.main.font_renderer.draw("Game Paused", 350, 300, [255, 0, 255]);
+		text = "Game Paused";
+
+		self.main.font_renderer.draw(text, self.main.screen_width / 2 - self.main.font_renderer.get_width(text) / 2, self.main.screen_height / 2, [255, 0, 255]);
