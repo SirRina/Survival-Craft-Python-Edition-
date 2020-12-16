@@ -6,6 +6,8 @@ class Camera:
 	MOUSE_SENSIVITY = 0.1;
 	MOUSE_INVERTED  = False;
 
+	CAMERA_LENGHT = 0.2;
+
 	def __init__(self, main, debug):
 		self.position = Vec(0, 0, 0);
 

@@ -48,9 +48,9 @@ class Block:
 
 	# No caso o min e maz AABB colisao fodase, negro.
 	def camera_in(self, camera):
-		return (camera.position.x >= self.aabb.min.x and camera.position.x <= self.aabb.max.x) and \
-			   (camera.position.y >= self.aabb.min.y and camera.position.y <= self.aabb.max.y) and \
-			   (camera.position.z >= self.aabb.min.z and camera.position.z <= self.aabb.max.z);
+		return (camera.position.x + camera.CAMERA_LENGHT >= self.aabb.min.x and camera.position.x - camera.CAMERA_LENGHT <= self.aabb.max.x) and \
+			   (camera.position.y + camera.CAMERA_LENGHT >= self.aabb.min.y and camera.position.y - camera.CAMERA_LENGHT <= self.aabb.max.y) and \
+			   (camera.position.z + camera.CAMERA_LENGHT >= self.aabb.min.z and camera.position.z - camera.CAMERA_LENGHT <= self.aabb.max.z);
 
 	def on_render(self):
 		# aqui eu desenho a pora, o que e pora;
