@@ -12,6 +12,7 @@ import math;
 import camera;
 import overlay;
 import guiscreen;
+import block;
 
 import game_gui;
 
@@ -20,60 +21,6 @@ VERSION = "0.0.1";
 
 SHOW_VERSION = True;
 START        = True;
-
-MASK_BLOCK = [
-	[0, 0, 0],
-	[0, 0, -1],
-	[-1, 0, -1],
-	[-1, 0, 0],
-
-	[0, 0, 0],
-	[-1, 0, 0],
-	[-1, -1, 0],
-	[0, -1, 0],
-
-	[0, 0, 0],
-	[0, -1, 0],
-	[0, -1, -1],
-	[0, 0, -1],
-
-	[-1, 0, 0],
-	[-1, 0, -1],
-	[-1, -1, -1],
-	[-1, -1, 0],
-
-	[0, 0, 0],
-	[0, -1, -1],
-	[-1, -1, -1],
-	[-1, -1, 0],
-
-	[0, 0, 0],
-	[-1, 0, -1],
-	[-1, -1, -1],
-	[0, -1, -1]
-]
-
-def render_polgyn(x, y, z, vertex_list):
-	GL11.glPushMatrix();
-
-	GL11.glTranslate(x, y, z);
-
-	GL11.glEnable(GL11.GL_BLEND);
-	GL11.glBlendFunc(GL11.GL_SRC_ALPHA, 771)
-
-	GL11.glBegin(GL11.GL_QUADS);
-
-	for vertex in vertex_list:
-		GL11.glVertex(vertex[0], vertex[1], vertex[2]);
-
-	GL11.glEnd();
-
-	GL11.glDisable(GL11.GL_BLEND);
-
-	GL11.glPopMatrix();
-
-def color(r, g, b, a = 255):
-	GL11.glColor(clamp(r, 0, 255) / 255, clamp(g, 0, 255) / 255, clamp(b, 0, 255) / 255, clamp(a, 0, 255) / 255);
 
 class Main:
 	screen_width  = 800;
@@ -121,6 +68,9 @@ class Main:
 		overlay.SPLIT = 0;
 
 		self.gui_manager.add(game_gui.GamePaused(self));
+
+		# NEGRO
+		self.block = block.Block("kjkjk");
 
 		while (True):
 			self.clock.tick(self.fps);
@@ -189,20 +139,18 @@ class Main:
 
 		keys = pygame.key.get_pressed();
 
+		if (keys[pygame.K_b]):
+			self.block.move();
+
 	def render_3D(self):
+		self.block.on_render();
+
+		if (self.block.camera_in(self.camera_manager)):
+			print("yes");
+		else:
+			print("no");
+
 		self.camera_manager.update_camera(0.1, self.screen_width, self.screen_height);
-
-		color(255, 0, 0);
-		render_polgyn(0, 0, -10, MASK_BLOCK);
-
-		color(0, 255, 0);
-		render_polgyn(0, 1, -10, MASK_BLOCK);
-
-		color(0, 0, 255);
-		render_polgyn(0, 2, -10, MASK_BLOCK);
-
-		if self.camera_manager.position.collide(0, 2, -10):
-			print("nigga")
 
 	def render_2D(self):
 		self.overlay_manager.on_render();

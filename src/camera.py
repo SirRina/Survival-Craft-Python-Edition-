@@ -72,6 +72,12 @@ class Camera:
 				self.position.x += strafe_speed * self.calcule_x_from_angle(self.yaw - 90);
 				self.position.z += strafe_speed * self.calcule_z_from_angle(self.yaw - 90);
 
+			if keys[pygame.K_SPACE]:
+				self.position.y -= 0.1;
+
+			if keys[pygame.K_LSHIFT]:
+				self.position.y += 0.1;
+
 			self.set_yaw(  (rel[0]) * self.MOUSE_SENSIVITY);
 			self.set_pitch((rel[1]) * self.MOUSE_SENSIVITY);
 

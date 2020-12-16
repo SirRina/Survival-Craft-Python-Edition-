@@ -127,3 +127,9 @@ class CustomTextRender(object):
 		GL.glBindTexture(GL.GL_TEXTURE_2D, 0);
 
 		GL.glDisable(GL.GL_TEXTURE_2D);
+
+# NEgro.
+class AABB:
+	def __init__(self):
+		self.min = Vec(0, 0, 0);
+		self.max = Vec(0, 0, 0);
