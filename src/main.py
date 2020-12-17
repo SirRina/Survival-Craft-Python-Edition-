@@ -68,9 +68,21 @@ class Main:
 		overlay.SPLIT = 0;
 
 		self.gui_manager.add(game_gui.GamePaused(self));
+		self.gui_manager.add(game_gui.MainMenu(self));
 
 		# NEGRO
 		self.block = block.Block("kjkjk");
+
+		self.cancel_render_3D = False;
+
+		# Ok ele foi ativado entao.
+		# Mas olha, eu fiz no final por que eu preciso iniciar 
+		# antes as variaveis como 
+		# cancel_render_3d
+		# por que se nao da errokkk
+		# ou seja, eu preciso cancelar o render 3D
+		# depois que a variavel foi criada.
+		self.gui_manager.get("MainMenu").open();
 
 		while (True):
 			self.clock.tick(self.fps);
@@ -86,7 +98,8 @@ class Main:
 
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 
-			self.render_3D();
+			if self.cancel_render_3D != True:
+				self.render_3D();
 
 			GL11.glPushMatrix();
 
@@ -131,11 +144,12 @@ class Main:
 			if current_event.type == pygame.MOUSEBUTTONDOWN:
 				self.gui_manager.update_click_down(current_event.button);
 
-			if current_event.type == pygame.KEYDOWN:
-				try:
-					self.gui_manager.get(game_gui.KEYBIND_GUI[current_event.key]).toggle();
-				except:
-					pass
+			if self.gui_manager.get("MainMenu").active == False:
+				if current_event.type == pygame.KEYDOWN:
+					try:
+						self.gui_manager.open(game_gui.KEYBIND_GUI[current_event.key]);
+					except:
+						pass
 
 		keys = pygame.key.get_pressed();
 
