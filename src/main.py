@@ -69,6 +69,7 @@ class Main:
 
 		self.gui_manager.add(game_gui.GamePaused(self));
 		self.gui_manager.add(game_gui.MainMenu(self));
+		self.gui_manager.add(game_gui.Inventory(self));
 
 		# NEGRO
 		self.block = block.Block("kjkjk");
