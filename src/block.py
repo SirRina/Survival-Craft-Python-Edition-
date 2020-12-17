@@ -46,7 +46,7 @@ class Block:
 	def move(self):
 		self.aabb.min.x += 0.1;
 
-	# No caso o min e maz AABB colisao fodase, negro.
+	# No caso o min e maz AABB colisao fodase.
 	def camera_in(self, camera):
 		return (camera.position.x + camera.CAMERA_LENGHT >= self.aabb.min.x and camera.position.x - camera.CAMERA_LENGHT <= self.aabb.max.x) and \
 			   (camera.position.y + camera.CAMERA_LENGHT >= self.aabb.min.y and camera.position.y - camera.CAMERA_LENGHT <= self.aabb.max.y) and \
