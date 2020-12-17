@@ -70,6 +70,27 @@ def lerp(a, b, partial):
 def clamp(value, minimum, maximum):
 	return (value if value <= maximum else maximum) if value >= minimum else minimum;
 
+def convert_to_texture(surface):
+	w = surface.get_width();
+	h = surface.get_height();
+
+	data    = pygame.image.tostring(surface, "RGBA", 1);
+	texture = GL.glGenTextures(1);
+
+	GL.glBindTexture(GL.GL_TEXTURE_2D, texture);
+	GL.glPixelStorei(GL.GL_UNPACK_ALIGNMENT, 1);
+	GL.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_MODULATE);
+
+	GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
+
+	GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST);
+	GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE);
+	GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE);
+
+	GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, w, h, 0, GL.GL_RGBA,GL_UNSIGNED_BYTE, data);
+
+	return texture;
+
 class CustomTextRender(object):
 	def __init__(self, font = None, size = None):
 		self.path  = font;
@@ -108,8 +129,8 @@ class CustomTextRender(object):
 
 		GL.glBindTexture(GL.GL_TEXTURE_2D, id)
 		
-		GL.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR)
-		GL.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR)
+		GL.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
+		GL.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
 
 		GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, width, height, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, data)			
 		GL.glBindTexture(GL.GL_TEXTURE_2D, 0)
