@@ -80,31 +80,31 @@ class Skybox:
 		GL11.glVertex3f(self.x + self.w, self.y + self.h, self.z);
 		GL11.glEnd();
 
-		glBindTexture(GL_TEXTURE_2D, self.texture["UP"])
-		glBegin(GL_QUADS)
-		glTexCoord2f(0, 0)
-		glVertex3f(x+width, y+height, z)
-		glTexCoord2f(1, 0)
-		glVertex3f(x+width, y+height, z+length)
-		glTexCoord2f(1, 1)
-		glVertex3f(x, y+height, z+length)
-		glTexCoord2f(0, 1)
-		glVertex3f(x, y+height, z)
-		glEnd()
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, self.texture[4]);
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0, 0);
+		GL11.glVertex3f(self.x + self.w, self.y + self.h, self.z);
+		GL11.glTexCoord2f(1, 0);
+		GL11.glVertex3f(self.x + self.w, self.y + self.h, self.z + self.l);
+		GL11.glTexCoord2f(1, 1);
+		GL11.glVertex3f(self.x, self.y + self.h, self.z + self.l);
+		GL11.glTexCoord2f(0, 1);
+		GL11.glVertex3f(self.x, self.y + self.h, self.z);
+		GL11.glEnd();
 
-		glBindTexture(GL_TEXTURE_2D, self.texture["DOWN"])
-		glBegin(GL_QUADS)
-		glTexCoord2f(0, 0)
-		glVertex3f(x, y, z)
-		glTexCoord2f(1, 0)
-		glVertex3f(x, y, z+length)
-		glTexCoord2f(1, 1)
-		glVertex3f(x+width, y, z+length)
-		glTexCoord2f(0, 1)
-		glVertex3f(x+width, y, z)
-		glEnd()
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, self.texture[5])
+		GL11.glBegin(GL11..GL_QUADS)
+		GL11.glTexCoord2f(0, 0)
+		GL11.glVertex3f(self.x, self.y, self.z)
+		GL11.glTexCoord2f(1, 0)
+		GL11.glVertex3f(self.x, self.y, self.z + self.l)
+		GL11.glTexCoord2f(1, 1)
+		GL11.glVertex3f(self.x + self.w, self.y, self.z + self.l)
+		GL11.glTexCoord2f(0, 1)
+		GL11.glVertex3f(self.x + self.w, self.y, self.z)
+		GL11.glEnd()
 
-		glBindTexture(GL_TEXTURE_2D,0)
-		glDisable(GL_TEXTURE_2D)
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0)
+		GL11.glDisable(GL11.GL_TEXTURE_2D)
 
-		glEndList()
+		GL11.glEndList()
