@@ -109,7 +109,7 @@ class Main:
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 
 		while (True):
-			self.partial_ticks   = self.clock.tick() / (self.fps * self.fps);
+			self.partial_ticks   = self.clock.tick() / self.fps;
 			self.delta_time      = self.partial_ticks - self.last_delta_time;
 			self.last_delta_time = self.partial_ticks;
 
@@ -169,16 +169,18 @@ class Main:
 
 		keys = pygame.key.get_pressed();
 
-		if (keys[pygame.K_b]):
-			self.block.move();
+		if (keys[pygame.K_r]):
+			self.camera_manager.set_pos(0, 0, 0);
+
+		if (keys[pygame.K_t]):
+			self.camera_manager.set_static_pos(0, 0, 0);
+
+		self.camera_manager.update_camera(0.1, self.screen_width, self.screen_height);
 
 	def render_3D(self):
 		# ok liguei a lista criada na classe skybox que renderiza tudo.
 		self.skybox.on_render();
-
 		self.block.on_render();
-
-		self.camera_manager.update_camera(0.1, self.screen_width, self.screen_height);
 
 	def render_2D(self):
 		self.overlay_manager.on_render();

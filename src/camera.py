@@ -19,6 +19,8 @@ class Camera:
 
 		self.main = main;
 
+		self.x, self.y, self.z = 0, 0, 0;
+
 	def get_pos(self):
 		return self.position.get();
 
@@ -45,6 +47,18 @@ class Camera:
 
 	def focus(self):
 		self.focused = True;
+
+	def set_pos(self, x, y, z):
+		self.position.x = x;
+		self.position.y = y;
+		self.position.z = z;
+
+	def set_static_pos(self, x, y, z):
+		self.set_pos(x, y, z);
+
+		self.x = x;
+		self.y = y;
+		self.z = z;
 
 	def update_camera(self, delta_time, w, h):
 		GL.glLoadIdentity();
@@ -97,4 +111,10 @@ class Camera:
 
 		GL.glRotate(self.pitch, 1, 0, 0)
 		GL.glRotate(360 - self.yaw, 0, 1, 0);
-		GL.glTranslate(self.position.x, self.position.y, self.position.z);
+
+		# el ogro
+		self.x = lerp(self.x, self.position.x, self.main.partial_ticks);
+		self.y = lerp(self.y, self.position.y, self.main.partial_ticks);
+		self.z = lerp(self.z, self.position.z, self.main.partial_ticks);
+
+		GL.glTranslate(self.x, self.y, self.z);

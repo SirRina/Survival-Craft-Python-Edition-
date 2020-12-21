@@ -127,6 +127,8 @@ class CustomTextRender(object):
 		GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, width, height, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, data)			
 		GL.glBindTexture(GL.GL_TEXTURE_2D, 0)
 
+		GL.glDisable(GL.GL_DEPTH_TEST);
+
 		GL.glEnable(GL.GL_BLEND)
 		GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
 		GL.glBindTexture(GL.GL_TEXTURE_2D, id)
@@ -140,6 +142,8 @@ class CustomTextRender(object):
 		GL.glBindTexture(GL.GL_TEXTURE_2D, 0);
 
 		GL.glDisable(GL.GL_TEXTURE_2D);
+		GL.glDisable(GL.GL_BLEND);
+		GL.glEnable(GL.GL_DEPTH_TEST);
 
 # NEgro.
 class AABB:
@@ -151,3 +155,10 @@ class AABB:
 		return (self.min.x >= aabb.min.x and self.max.x <= aabb.max.x) and \
 			   (self.min.y >= aabb.min.y and self.max.y <= aabb.max.y) and \
 			   (self.min.z >= aabb.min.z and self.max.z <= aabb.max.z);
+
+# oi brain
+class Rect:
+	def __init__(self, tag):
+		self.x, self.y, self.w, self.h = 0, 0, 0, 0;
+
+		self.tag = tag;
