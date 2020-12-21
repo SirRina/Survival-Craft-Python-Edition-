@@ -44,7 +44,7 @@ class Main:
 		self.screen_width  = w;
 		self.screen_height = h;
 
-		# Resize and define new display.
+		# Refrescar agua.
 		self.refresh_size();
 
 	def do_run(self):
