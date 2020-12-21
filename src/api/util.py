@@ -32,14 +32,6 @@ class Vec:
 	def length(self):
 		return sqrt(self.x * self.x + self.y + self.z * self.z);
 
-	def collide(self, x, y, z):
-		if self.x >= x + 1 and self.x - 1 <= x and \
-		   self.y >= y + 1 and self.y - 1 <= y and \
-		   self.z >= z + 1 and self.y - 1 <= z:
-		   	return True;
-
-		return False;
-
 	def __add__(self, num):
 		if type(num) is Vec:
 			return Vec(self.x + num.x, self.y + num.y, self.z + num.z);
@@ -87,7 +79,7 @@ def convert_to_texture(surface):
 	GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE);
 	GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE);
 
-	GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, w, h, 0, GL.GL_RGBA,GL_UNSIGNED_BYTE, data);
+	GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, w, h, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, data);
 
 	return texture;
 
@@ -154,3 +146,8 @@ class AABB:
 	def __init__(self):
 		self.min = Vec(0, 0, 0);
 		self.max = Vec(0, 0, 0);
+
+	def collide(self, aabb):
+		return (self.min.x >= aabb.min.x and self.max.x <= aabb.max.x) and \
+			   (self.min.y >= aabb.min.y and self.max.y <= aabb.max.y) and \
+			   (self.min.z >= aabb.min.z and self.max.z <= aabb.max.z);
