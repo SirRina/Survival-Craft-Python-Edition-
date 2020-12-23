@@ -1,6 +1,7 @@
-from api.libs import pygame, GL, GLU;
 from api.util import Vec, lerp, clamp;
 from math     import sin, cos, sqrt, degrees, radians, pi;
+
+import pygame, OpenGL.GL as GL11;
 
 class Camera:
 	MOUSE_SENSIVITY = 0.1;
@@ -61,7 +62,7 @@ class Camera:
 		self.z = z;
 
 	def update_camera(self, delta_time, w, h):
-		GL.glLoadIdentity();
+		GL11.glLoadIdentity();
 
 		keys = pygame.key.get_pressed();
 		rel  = pygame.mouse.get_rel();
@@ -109,12 +110,12 @@ class Camera:
 		if self.pitch <= -90:
 			self.pitch = -90;
 
-		GL.glRotate(self.pitch, 1, 0, 0)
-		GL.glRotate(360 - self.yaw, 0, 1, 0);
+		GL11.glRotate(self.pitch, 1, 0, 0)
+		GL11.glRotate(360 - self.yaw, 0, 1, 0);
 
 		# el ogro
 		self.x = lerp(self.x, self.position.x, self.main.partial_ticks);
 		self.y = lerp(self.y, self.position.y, self.main.partial_ticks);
 		self.z = lerp(self.z, self.position.z, self.main.partial_ticks);
 
-		GL.glTranslate(self.x, self.y, self.z);
+		GL11.glTranslate(self.x, self.y, self.z);

@@ -4,16 +4,19 @@
 # Main class and game client initializer.
 #
 
-from api.libs import GL as GL11, pygame, GLU;
 from api.util import lerp, Vec, CustomTextRender, clamp;
 
-import math;
+from OpenGL import GL as GL11, GLU;
 
+import pygame;
+import math;
 import camera;
 import overlay;
 import guiscreen;
 import block;
 import skybox;
+import entity_manager;
+import entity;
 
 import game_gui;
 
@@ -67,6 +70,10 @@ class Main:
 
 		self.camera_manager.focused = True;
 
+		self.loaded_entity_list = [];
+
+		self.entity_manager_ = entity_manager.EntityManager(self);
+
 		overlay.SPLIT = 0;
 
 		self.background = [190, 190, 190];
@@ -83,6 +90,12 @@ class Main:
 		self.block = block.Block("kjkjk");
 
 		self.cancel_render_3D = False;
+
+		# Tem que cria o player.
+		self.player = entity.EntityPlayer("Player", "Player", "Ngga");\
+		self.player.init();
+
+		self.loaded_entity_list.append(self.player);
 
 		# Ok ele foi ativado entao.
 		# Mas olha, eu fiz no final por que eu preciso iniciar 
@@ -170,17 +183,18 @@ class Main:
 		keys = pygame.key.get_pressed();
 
 		if (keys[pygame.K_r]):
-			self.camera_manager.set_pos(0, 0, 0);
+			self.player.set_living(False);
 
 		if (keys[pygame.K_t]):
-			self.camera_manager.set_static_pos(0, 0, 0);
+			self.player.set_living(True);
 
+		self.entity_manager_.on_update();
 		self.camera_manager.update_camera(0.1, self.screen_width, self.screen_height);
 
 	def render_3D(self):
 		# ok liguei a lista criada na classe skybox que renderiza tudo.
 		self.skybox.on_render();
-		self.block.on_render();
+		self.entity_manager_.on_render();
 
 	def render_2D(self):
 		self.overlay_manager.on_render();

@@ -22,8 +22,8 @@ class Block:
 
 	def on_render(self):
 		# aqui eu desenho a pora, o que e pora;
-		GL11.glPushMatrix();
-		GL11.glTranslate(self.aabb.min.x, self.aabb.min.y, self.aabb.min.z);
+		#GL11.glPushMatrix();
+		#GL11.glTranslate(self.aabb.min.x, self.aabb.min.y, self.aabb.min.z);
 
 		GL11.glBegin(GL11.GL_QUADS);
 
@@ -101,4 +101,4 @@ class Block:
 
 		GL11.glEnd();
 
-		GL11.glPopMatrix();
+		#GL11.glPopMatrix();
