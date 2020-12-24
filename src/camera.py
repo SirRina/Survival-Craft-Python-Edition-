@@ -1,6 +1,7 @@
-from api.libs import pygame, GL, GLU;
 from api.util import Vec, lerp, clamp;
 from math     import sin, cos, sqrt, degrees, radians, pi;
+
+import pygame, OpenGL.GL as GL11;
 
 class Camera:
 	MOUSE_SENSIVITY = 0.1;
@@ -18,6 +19,8 @@ class Camera:
 		self.focused = False;
 
 		self.main = main;
+
+		self.x, self.y, self.z = 0, 0, 0;
 
 	def get_pos(self):
 		return self.position.get();
@@ -46,8 +49,20 @@ class Camera:
 	def focus(self):
 		self.focused = True;
 
+	def set_pos(self, x, y, z):
+		self.position.x = x;
+		self.position.y = y;
+		self.position.z = z;
+
+	def set_static_pos(self, x, y, z):
+		self.set_pos(x, y, z);
+
+		self.x = x;
+		self.y = y;
+		self.z = z;
+
 	def update_camera(self, delta_time, w, h):
-		GL.glLoadIdentity();
+		GL11.glLoadIdentity();
 
 		keys = pygame.key.get_pressed();
 		rel  = pygame.mouse.get_rel();
@@ -95,6 +110,12 @@ class Camera:
 		if self.pitch <= -90:
 			self.pitch = -90;
 
-		GL.glRotate(self.pitch, 1, 0, 0)
-		GL.glRotate(360 - self.yaw, 0, 1, 0);
-		GL.glTranslate(self.position.x, self.position.y, self.position.z);
+		GL11.glRotate(self.pitch, 1, 0, 0)
+		GL11.glRotate(360 - self.yaw, 0, 1, 0);
+
+		# el ogro
+		self.x = lerp(self.x, self.position.x, self.main.partial_ticks);
+		self.y = lerp(self.y, self.position.y, self.main.partial_ticks);
+		self.z = lerp(self.z, self.position.z, self.main.partial_ticks);
+
+		GL11.glTranslate(self.x, self.y, self.z);

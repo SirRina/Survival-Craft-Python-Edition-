@@ -4,15 +4,19 @@
 # Main class and game client initializer.
 #
 
-from api.libs import GL as GL11, pygame, GLU;
 from api.util import lerp, Vec, CustomTextRender, clamp;
 
-import math;
+from OpenGL import GL as GL11, GLU;
 
+import pygame;
+import math;
 import camera;
 import overlay;
 import guiscreen;
 import block;
+import skybox;
+import entity_manager;
+import entity;
 
 import game_gui;
 
@@ -43,11 +47,11 @@ class Main:
 		self.screen_width  = w;
 		self.screen_height = h;
 
-		# Resize and define new display.
+		# Refrescar agua.
 		self.refresh_size();
 
 	def do_run(self):
-		self.fov = 60; self.fog = 500;
+		self.fov = 60; self.fog = 5000.0;
 
 		self.GL11 = GL11;
 
@@ -58,14 +62,25 @@ class Main:
 		self.clock = pygame.time.Clock();
 		self.fps   = 75; # locked;
 
+		self.clock.tick(self.fps);
+
 		self.font_renderer = CustomTextRender("Arial", 19);
 
-		self.partial_ticks   = self.clock.tick() / self.fps;
-		self.last_delta_time = self.partial_ticks;
+		self.last_delta_time = 0;
 
 		self.camera_manager.focused = True;
 
+		self.loaded_entity_list = [];
+
+		self.entity_manager_ = entity_manager.EntityManager(self);
+
 		overlay.SPLIT = 0;
+
+		self.background = [190, 190, 190];
+
+		# O skybox ou seja aquele bagulho do ceu, incesto insano[
+		self.skybox = skybox.Skybox("textures/skybox/");
+		self.skybox.prepare();
 
 		self.gui_manager.add(game_gui.GamePaused(self));
 		self.gui_manager.add(game_gui.MainMenu(self));
@@ -76,6 +91,12 @@ class Main:
 
 		self.cancel_render_3D = False;
 
+		# Tem que cria o player.
+		self.player = entity.EntityPlayer("Player", "Player", "Ngga");\
+		self.player.init();
+
+		self.loaded_entity_list.append(self.player);
+
 		# Ok ele foi ativado entao.
 		# Mas olha, eu fiz no final por que eu preciso iniciar 
 		# antes as variaveis como 
@@ -85,9 +106,22 @@ class Main:
 		# depois que a variavel foi criada.
 		self.gui_manager.get("MainMenu").open();
 
-		while (True):
-			self.clock.tick(self.fps);
+		# Aplicamos o OPENGL.
+		GL11.glClearDepth(1)
 
+		GL11.glViewport(0, 0, self.screen_width, self.screen_height);
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glLoadIdentity();
+	
+		GLU.gluPerspective(self.fov, (self.screen_width / self.screen_height), 0.1, self.fog);
+	
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		GL11.glLoadIdentity();
+
+		GL11.glDisable(GL11.GL_CULL_FACE);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+
+		while (True):
 			self.partial_ticks   = self.clock.tick() / self.fps;
 			self.delta_time      = self.partial_ticks - self.last_delta_time;
 			self.last_delta_time = self.partial_ticks;
@@ -95,16 +129,12 @@ class Main:
 			self.update_event();
 
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-			GL11.glClearColor(0.5, 0.5, 0.5, 0.5);
-
-			GL11.glEnable(GL11.GL_DEPTH_TEST);
+			GL11.glClearColor(float(self.background[0] / 255.0), float(self.background[1] / 255.0), float(self.background[2] / 255.0), 1.0);
 
 			if self.cancel_render_3D != True:
 				self.render_3D();
 
 			GL11.glPushMatrix();
-
-			GL11.glDisable(GL11.GL_DEPTH_TEST);
 
 			GL11.glViewport(0, 0, self.screen_width, self.screen_height);
 			GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -125,8 +155,6 @@ class Main:
 	
 			GL11.glMatrixMode(GL11.GL_MODELVIEW);
 			GL11.glLoadIdentity();
-
-			GL11.glEnable(GL11.GL_DEPTH_TEST);
 	
 			GL11.glPopMatrix();
 
@@ -154,18 +182,19 @@ class Main:
 
 		keys = pygame.key.get_pressed();
 
-		if (keys[pygame.K_b]):
-			self.block.move();
+		if (keys[pygame.K_r]):
+			self.player.set_living(False);
+
+		if (keys[pygame.K_t]):
+			self.player.set_living(True);
+
+		self.entity_manager_.on_update();
+		self.camera_manager.update_camera(0.1, self.screen_width, self.screen_height);
 
 	def render_3D(self):
-		self.block.on_render();
-
-		if (self.block.camera_in(self.camera_manager)):
-			print("yes");
-		else:
-			print("no");
-
-		self.camera_manager.update_camera(0.1, self.screen_width, self.screen_height);
+		# ok liguei a lista criada na classe skybox que renderiza tudo.
+		self.skybox.on_render();
+		self.entity_manager_.on_render();
 
 	def render_2D(self):
 		self.overlay_manager.on_render();

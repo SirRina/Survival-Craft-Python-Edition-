@@ -6,7 +6,7 @@
 
 import pygame
 
-import OpenGL.GL  as GL;
+import OpenGL.GL  as GL11;
 import OpenGL.GLU as GLU;
 
 from math import sqrt;
@@ -31,14 +31,6 @@ class Vec:
 
 	def length(self):
 		return sqrt(self.x * self.x + self.y + self.z * self.z);
-
-	def collide(self, x, y, z):
-		if self.x >= x + 1 and self.x - 1 <= x and \
-		   self.y >= y + 1 and self.y - 1 <= y and \
-		   self.z >= z + 1 and self.y - 1 <= z:
-		   	return True;
-
-		return False;
 
 	def __add__(self, num):
 		if type(num) is Vec:
@@ -75,19 +67,19 @@ def convert_to_texture(surface):
 	h = surface.get_height();
 
 	data    = pygame.image.tostring(surface, "RGBA", 1);
-	texture = GL.glGenTextures(1);
+	texture = GL11.glGenTextures(1);
 
-	GL.glBindTexture(GL.GL_TEXTURE_2D, texture);
-	GL.glPixelStorei(GL.GL_UNPACK_ALIGNMENT, 1);
-	GL.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_MODULATE);
+	GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
+	GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
+	GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
 
-	GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
+	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
 
-	GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST);
-	GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE);
-	GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE);
+	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP_TO_EDGE);
+	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP_TO_EDGE);
 
-	GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, w, h, 0, GL.GL_RGBA,GL_UNSIGNED_BYTE, data);
+	GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, w, h, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data);
 
 	return texture;
 
@@ -123,34 +115,50 @@ class CustomTextRender(object):
 		data          = pygame.image.tostring(surface_text, "RGBA");
 		width, height = surface_text.get_size();
 
-		id = GL.glGenTextures(1)
+		id = GL11.glGenTextures(1)
 
-		GL.glEnable(GL.GL_TEXTURE_2D);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
 
-		GL.glBindTexture(GL.GL_TEXTURE_2D, id)
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, id)
 		
-		GL.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
-		GL.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
+		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST)
+		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST)
 
-		GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, width, height, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, data)			
-		GL.glBindTexture(GL.GL_TEXTURE_2D, 0)
+		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data)			
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0)
 
-		GL.glEnable(GL.GL_BLEND)
-		GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
-		GL.glBindTexture(GL.GL_TEXTURE_2D, id)
-		GL.glBegin(GL.GL_QUADS)
-		GL.glTexCoord(0, 0); GL.glVertex(x, y, 0)
-		GL.glTexCoord(0, 1); GL.glVertex(x, y + height, 0)
-		GL.glTexCoord(1, 1); GL.glVertex(x + width, y + height, 0)
-		GL.glTexCoord(1, 0); GL.glVertex(x + width, y, 0)
-		GL.glEnd();
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
 
-		GL.glBindTexture(GL.GL_TEXTURE_2D, 0);
+		GL11.glEnable(GL11.GL_BLEND)
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, id)
+		GL11.glBegin(GL11.GL_QUADS)
+		GL11.glTexCoord(0, 0); GL11.glVertex(x, y, 0)
+		GL11.glTexCoord(0, 1); GL11.glVertex(x, y + height, 0)
+		GL11.glTexCoord(1, 1); GL11.glVertex(x + width, y + height, 0)
+		GL11.glTexCoord(1, 0); GL11.glVertex(x + width, y, 0)
+		GL11.glEnd();
 
-		GL.glDisable(GL.GL_TEXTURE_2D);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
 
 # NEgro.
 class AABB:
 	def __init__(self):
 		self.min = Vec(0, 0, 0);
 		self.max = Vec(0, 0, 0);
+
+	def collide(self, aabb):
+		return (self.min.x >= aabb.min.x and self.max.x <= aabb.max.x) and \
+			   (self.min.y >= aabb.min.y and self.max.y <= aabb.max.y) and \
+			   (self.min.z >= aabb.min.z and self.max.z <= aabb.max.z);
+
+# oi brain
+class Rect:
+	def __init__(self, tag):
+		self.x, self.y, self.w, self.h = 0, 0, 0, 0;
+
+		self.tag = tag;
