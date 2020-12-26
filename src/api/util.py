@@ -4,7 +4,8 @@
 # Game util;
 #
 
-import pygame
+import pygame;
+import time;
 
 import OpenGL.GL  as GL11;
 import OpenGL.GLU as GLU;
@@ -141,9 +142,9 @@ class CustomTextRender(object):
 
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
 # NEgro.
 class AABB:
@@ -162,3 +163,20 @@ class Rect:
 		self.x, self.y, self.w, self.h = 0, 0, 0, 0;
 
 		self.tag = tag;
+
+# aqui e so um contador de tempo, to fazendo mesmo e pra marcar tempo, tipo se passou 1 segundo etc.
+class Tick:
+	def __init__(self):
+		self.ticks = -1;
+
+	def reset(self):
+		self.ticks = pygame.time.get_ticks();
+
+	def current_ticks(self):
+		return pygame.time.get_ticks() - self.ticks;
+
+	def is_passed(self, ms):
+		return pygame.time.get_ticks() - self.ticks >= ms;
+
+	def count(self, ms_div):
+		return (pygame.time.get_ticks() - self.ticks) / ms_div;
