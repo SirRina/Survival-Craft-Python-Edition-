@@ -173,8 +173,6 @@ class Main:
 	
 			GL11.glPopMatrix();
 
-			print(self.fov)
-
 			pygame.display.flip();
 
 	def init_keys(self):
