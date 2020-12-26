@@ -9,7 +9,9 @@ from api.util import lerp, Vec, CustomTextRender, clamp;
 from OpenGL import GL as GL11, GLU;
 
 import pygame;
-import math;
+import time;
+
+# Todos as fields daqui.
 import camera;
 import overlay;
 import guiscreen;
@@ -17,10 +19,15 @@ import block;
 import skybox;
 import entity_manager;
 import entity;
+<<<<<<< HEAD
 import os; 
 from os import path;
 
+=======
+import keyboard;
+>>>>>>> 28f74aff5a6b1c55c1458fdff6739d8ca5cd7ee0
 import game_gui;
+import game_settings;
 
 NAME    = "kkjkjkjk minecrafr e pytion"
 VERSION = "0.0.1";
@@ -29,13 +36,13 @@ SHOW_VERSION = True;
 START        = True;
 
 class Main:
-	screen_width  = 800;
-	screen_height = 600;
+	screen_width  = 1280;
+	screen_height = 720;
 
 	def __init__(self):
 		pygame.init();
 
-		self.display = pygame.display.set_mode((self.screen_width, self.screen_height), pygame.OPENGL | pygame.DOUBLEBUF);
+		self.refresh_size();
 
 		pygame.display.set_caption(NAME + " " + (VERSION if SHOW_VERSION is True else ""));
 
@@ -43,7 +50,15 @@ class Main:
 		pygame.display.set_caption(title + " - " + NAME + " " + (VERSION if SHOW_VERSION is True else ""));
 
 	def refresh_size(self):
-		self.display = pygame.display.set_mode((self.screen_width, self.screen_height), pygame.OPENGL | pygame.DOUBLEBUF);
+		flags = pygame.OPENGL | pygame.DOUBLEBUF; 
+
+		if game_settings.CONFIG_FULLSCREEN:
+			flags |= pygame.FULLSCREEN;
+
+			self.screen_width  = game_settings.CONFIG_FULLSCREEN_RESOLUTION[0][0];
+			self.screen_height = game_settings.CONFIG_FULLSCREEN_RESOLUTION[0][1];
+
+		self.display = pygame.display.set_mode((self.screen_width, self.screen_height), flags);
 
 	def set_size(self, w, h):
 		self.screen_width  = w;
@@ -53,16 +68,15 @@ class Main:
 		self.refresh_size();
 
 	def do_run(self):
-		self.fov = 60; self.fog = 5000.0;
+		self.fov = game_settings.CONFIG_FOV; self.fog = 5000.0;
 
-		self.GL11 = GL11;
-
-		self.camera_manager  = camera.Camera(self, False);
-		self.overlay_manager = overlay.OverlayManager(CURRENT_OPENGL = GL11, main = self);
-		self.gui_manager     = guiscreen.GUIManager();
+		self.camera_manager   = camera.CameraManager(self);
+		self.overlay_manager  = overlay.OverlayManager(CURRENT_OPENGL = GL11, main = self);
+		self.gui_manager      = guiscreen.GUIManager();
+		self.keyboard_manager = keyboard.KeyBindingManager();
 
 		self.clock = pygame.time.Clock();
-		self.fps   = 75; # locked;
+		self.fps   = 240; # locked;
 
 		self.clock.tick(self.fps);
 
@@ -88,16 +102,19 @@ class Main:
 		self.gui_manager.add(game_gui.MainMenu(self));
 		self.gui_manager.add(game_gui.Inventory(self));
 
-		# NEGRO
-		self.block = block.Block("kjkjk");
-
 		self.cancel_render_3D = False;
 
 		# Tem que cria o player.
-		self.player = entity.EntityPlayer("Player", "Player", "Ngga");\
+		self.player = entity.EntityPlayer("Player", "Player", "Ngga");
 		self.player.init();
+		self.player.set_camera(True);
+		self.player.fly = True;
 
 		self.loaded_entity_list.append(self.player);
+
+		# Tem que inisia, eu posso fazer um sistema de salvar keybinds,
+		# mas isso nao vai ser taooo nesssesario agora, entao fica assim!
+		self.init_keys();
 
 		# Ok ele foi ativado entao.
 		# Mas olha, eu fiz no final por que eu preciso iniciar 
@@ -107,6 +124,8 @@ class Main:
 		# ou seja, eu preciso cancelar o render 3D
 		# depois que a variavel foi criada.
 		self.gui_manager.get("MainMenu").open();
+
+		self.block = block.Block("qwwqd");
 
 		# Aplicamos o OPENGL.
 		GL11.glClearDepth(1)
@@ -124,7 +143,7 @@ class Main:
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 
 		while (True):
-			self.partial_ticks   = self.clock.tick() / self.fps;
+			self.partial_ticks   = self.clock.tick(self.fps) / 60;
 			self.delta_time      = self.partial_ticks - self.last_delta_time;
 			self.last_delta_time = self.partial_ticks;
 
@@ -162,6 +181,16 @@ class Main:
 
 			pygame.display.flip();
 
+	def init_keys(self):
+		# Menstruasao
+		self.keyboard_manager.add("MoveForward", pygame.K_w);
+		self.keyboard_manager.add("MoveBackward", pygame.K_s);
+		self.keyboard_manager.add("MoveStrafeLeft", pygame.K_a);
+		self.keyboard_manager.add("MoveStrafeRight", pygame.K_d);
+		self.keyboard_manager.add("MoveJump", pygame.K_SPACE);
+		self.keyboard_manager.add("MoveCrouch", pygame.K_LSHIFT);
+		self.keyboard_manager.add("MoveSpriting", pygame.K_w); # duas vezesw veq
+
 	def update_event(self):
 		for current_event in pygame.event.get():
 			if (current_event.type == pygame.QUIT):
@@ -176,27 +205,28 @@ class Main:
 				self.gui_manager.update_click_down(current_event.button);
 
 			if self.gui_manager.get("MainMenu").active == False:
+				self.gui_manager.current_gui = None;
+
+				if self.gui_manager.current_gui != self.gui_manager.get("GamePaused"):
+					self.entity_manager_.on_update_event(current_event);
+
 				if current_event.type == pygame.KEYDOWN:
 					try:
 						self.gui_manager.open(game_gui.KEYBIND_GUI[current_event.key]);
 					except:
 						pass
 
-		keys = pygame.key.get_pressed();
-
-		if (keys[pygame.K_r]):
-			self.player.set_living(False);
-
-		if (keys[pygame.K_t]):
-			self.player.set_living(True);
-
-		self.entity_manager_.on_update();
-		self.camera_manager.update_camera(0.1, self.screen_width, self.screen_height);
+		if self.gui_manager.current_gui != self.gui_manager.get("GamePaused"):
+			self.entity_manager_.on_update();
+			self.entity_manager_.on_world_update();
+			self.camera_manager.update_camera();
 
 	def render_3D(self):
 		# ok liguei a lista criada na classe skybox que renderiza tudo.
 		self.skybox.on_render();
 		self.entity_manager_.on_render();
+
+		self.block.on_render();
 
 	def render_2D(self):
 		self.overlay_manager.on_render();

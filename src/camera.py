@@ -3,19 +3,18 @@ from math     import sin, cos, sqrt, degrees, radians, pi;
 
 import pygame, OpenGL.GL as GL11;
 
-class Camera:
+class CameraManager:
 	MOUSE_SENSIVITY = 0.1;
 	MOUSE_INVERTED  = False;
 
 	CAMERA_LENGHT = 0.2;
 
-	def __init__(self, main, debug):
+	def __init__(self, main):
 		self.position = Vec(0, 0, 0);
 
 		self.yaw   = 60;
 		self.pitch = 0;
 
-		self.debug   = debug;
 		self.focused = False;
 
 		self.main = main;
@@ -61,48 +60,18 @@ class Camera:
 		self.y = y;
 		self.z = z;
 
-	def update_camera(self, delta_time, w, h):
+	def update_camera(self):
 		GL11.glLoadIdentity();
 
 		keys = pygame.key.get_pressed();
 		rel  = pygame.mouse.get_rel();
 
-		forward_speed  = 0.5 * delta_time;
-		backward_speed = 0.4 * delta_time;
-
-		strafe_speed = 0.4 * delta_time;
-
 		if self.focused:
-			if keys[pygame.K_w]:
-				self.position.x += self.calcule_x_from_angle(self.yaw) * forward_speed;
-				self.position.z += self.calcule_z_from_angle(self.yaw) * forward_speed;
-
-			if keys[pygame.K_s]:
-				self.position.x -= self.calcule_x_from_angle(self.yaw) * backward_speed;
-				self.position.z -= self.calcule_z_from_angle(self.yaw) * backward_speed;
-
-			if keys[pygame.K_a]:
-				self.position.x -= strafe_speed * self.calcule_x_from_angle(self.yaw - 90);
-				self.position.z -= strafe_speed * self.calcule_z_from_angle(self.yaw - 90);
-
-			if keys[pygame.K_d]:
-				self.position.x += strafe_speed * self.calcule_x_from_angle(self.yaw - 90);
-				self.position.z += strafe_speed * self.calcule_z_from_angle(self.yaw - 90);
-
-			if keys[pygame.K_SPACE]:
-				self.position.y -= 0.1;
-
-			if keys[pygame.K_LSHIFT]:
-				self.position.y += 0.1;
-
-			self.set_yaw(  (rel[0]) * self.MOUSE_SENSIVITY);
+			self.set_yaw((rel[0]) * self.MOUSE_SENSIVITY);
 			self.set_pitch((rel[1]) * self.MOUSE_SENSIVITY);
 
 		pygame.event.set_grab(self.focused)
 		pygame.mouse.set_visible(self.focused != True);
-
-		if self.debug:
-			print(self.position.get());
 
 		if self.pitch >= 90:
 			self.pitch = 90;
