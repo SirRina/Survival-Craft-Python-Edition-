@@ -3,6 +3,7 @@ from api.util import convert_to_texture;
 from OpenGL import GL as GL11;
 
 import pygame;
+import os;
 
 # filho de um anao
 class Skybox:
@@ -17,8 +18,9 @@ class Skybox:
 	def __init__(self, path):
 		self.textures = {};
 
-		for sides in ["front", "back", "left", "right", "up", "down"]:
-			self.textures[sides] = convert_to_texture(pygame.image.load(path + sides + ".png"));
+		for sides in ["back", "down", "front", "left", "right", "up"]:
+			filePath = os.path.join(os.path.abspath("src/textures/skybox/" + sides));
+			self.textures[sides] = convert_to_texture(pygame.image.load(filePath + ".png"));
 
 		self.list = GL11.glGenLists(1);
 

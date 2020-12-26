@@ -17,6 +17,8 @@ import block;
 import skybox;
 import entity_manager;
 import entity;
+import os; 
+from os import path;
 
 import game_gui;
 
@@ -78,8 +80,8 @@ class Main:
 
 		self.background = [190, 190, 190];
 
-		# O skybox ou seja aquele bagulho do ceu, incesto insano[
-		self.skybox = skybox.Skybox("textures/skybox/");
+		# O skybox ou seja aquele bagulho do ceu, incesto insano
+		self.skybox = skybox.Skybox("src/textures/skybox");
 		self.skybox.prepare();
 
 		self.gui_manager.add(game_gui.GamePaused(self));
