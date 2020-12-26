@@ -19,13 +19,10 @@ import block;
 import skybox;
 import entity_manager;
 import entity;
-<<<<<<< HEAD
 import os; 
 from os import path;
 
-=======
 import keyboard;
->>>>>>> 28f74aff5a6b1c55c1458fdff6739d8ca5cd7ee0
 import game_gui;
 import game_settings;
 
@@ -182,7 +179,7 @@ class Main:
 			pygame.display.flip();
 
 	def init_keys(self):
-		# Menstruasao
+		# teclado
 		self.keyboard_manager.add("MoveForward", pygame.K_w);
 		self.keyboard_manager.add("MoveBackward", pygame.K_s);
 		self.keyboard_manager.add("MoveStrafeLeft", pygame.K_a);
