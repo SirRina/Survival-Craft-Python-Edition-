@@ -26,8 +26,8 @@ import keyboard;
 import game_gui;
 import game_settings;
 
-NAME    = "kkjkjkjk minecrafr e pytion"
-VERSION = "0.0.1";
+NAME    = "pintão craft cobra "
+VERSION = "0.0.2";
 
 SHOW_VERSION = True;
 START        = True;
