@@ -10,7 +10,7 @@ import time;
 import OpenGL.GL  as GL11;
 import OpenGL.GLU as GLU;
 
-from math import sqrt;
+from math import sqrt, cos, sin, pi, atan2, hypot;
 
 class Vec:
 	def __init__(self, x, y, z):
@@ -62,6 +62,14 @@ def lerp(a, b, partial):
 
 def clamp(value, minimum, maximum):
 	return (value if value <= maximum else maximum) if value >= minimum else minimum;
+
+def add_angle_length(a, l, aa, ll):
+	x, y = sin(a) * l + sin(aa) * ll, cos(a) * l + cos(aa) * ll;
+
+	angle  = 0.5 * pi - atan2(x, y);
+	length = hypot(x, y);
+
+	return angle, length; 
 
 def convert_to_texture(surface):
 	w = surface.get_width();

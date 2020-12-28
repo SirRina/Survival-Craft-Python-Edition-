@@ -12,7 +12,7 @@ class EntityManager:
 		self.partial_ticks = 0.1;
 
 	def on_update_event(self, current_event):
-		for entities in self.main.loaded_entity_list:
+		for entities in self.main.world.loaded_entity_list:
 			if entities.rendering:
 				# Tiques parciais sao como um delta, nao muda nada.
 				entities.update_event(self.main.camera_manager, self.main.keyboard_manager, current_event);
@@ -20,15 +20,15 @@ class EntityManager:
 	def on_update(self):
 		self.partial_ticks = self.main.partial_ticks / 0.1;
 
-		for entities in self.main.loaded_entity_list:
+		for entities in self.main.world.loaded_entity_list:
 			if entities.rendering:
 				# Tiques parciais sao como um delta, nao muda nada.
 				entities.update(self.main.camera_manager, self.main.keyboard_manager, 0.1);
 
-	def on_world_update(self):
-		for entities in self.main.loaded_entity_list:
+	def on_world_update(self, the_world):
+		for entities in the_world.loaded_entity_list:
 			if entities.rendering:
-				entities.world_update();
+				entities.world_update(the_world);
 
 				if entities.get_health() <= 0:
 					entities.set_living(False);
@@ -41,6 +41,6 @@ class EntityManager:
 					self.main.fov = lerp(self.main.fov, game_settings.CONFIG_FOV, self.main.partial_ticks);
 
 	def on_render(self):
-		for entities in self.main.loaded_entity_list:
+		for entities in self.main.world.loaded_entity_list:
 			if entities.rendering:
 				entities.render();

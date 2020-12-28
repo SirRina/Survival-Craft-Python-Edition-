@@ -4,7 +4,6 @@ class KeyBindingManager:
 	def __init__(self):
 		self.key_bind_list = {};
 
-
 	def add(self, name, key):
 		self.key_bind_list[name] = key;
 

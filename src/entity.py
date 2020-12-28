@@ -1,7 +1,7 @@
-from api.util import Vec, Tick, lerp;
+from api.util import Vec, Tick, lerp, add_angle_length;
 from api.data_manager import DataManager;
 
-from math import sqrt;
+from math import sqrt, pi, cos;
 
 import OpenGL.GL as GL11;
 import pygame;
@@ -39,6 +39,7 @@ class Entity:
 class EntityPlayer(Entity):
 	wait_for_double_jump    = Tick();
 	wait_for_double_forward = Tick();
+	wait_for_delta_time     = Tick();
 
 	def __init__(self, name, tag, description):
 		super().__init__(name, tag, description);
@@ -47,9 +48,16 @@ class EntityPlayer(Entity):
 		self.physhic = True;
 		self.fly     = True;
 
+		# Massa e delta time,
+		self.delta_time = 0;
+		self.ampl       = 0.999;
+
 		# Basicamente e a rotacao da cabesa da entidade.
-		self.yaw      = 0;
-		self.pitch    = 0;
+		self.yaw   = 0;
+		self.pitch = 0;
+
+		self.angle    = 0;
+		self.velocity = 0;
 
 		# As variaveis basicas de movemento e acelelracao da entidade.
 		self.speed_forward  = 300;
@@ -156,7 +164,7 @@ class EntityPlayer(Entity):
 					else:
 						self.wait_for_double_jump.reset();
 
-				if event.key == keyboard_manager.get("MoveSpriting"):
+				if event.key == keyboard_manager.get("MoveSpriting") and (self.flag.get("OnGround") or self.flag.get("Flying")):
 					if not self.wait_for_double_forward.is_passed(500):
 						self.flag.set_value_data("Spriting", True);
 					else:
@@ -170,21 +178,32 @@ class EntityPlayer(Entity):
 
 				camera_manager.position = self.position;
 
+				# Lupa sempre pra false, ai se eu ando ele muda corretamente.
+				self.flag.set_value_data("Walking", False);
+
 				if keyboard_manager.is_pressed("MoveForward"):
 					self.position.x += camera_manager.calcule_x_from_angle(self.yaw) * ((self.speed_forward / 1000) * 0.1);
 					self.position.z += camera_manager.calcule_z_from_angle(self.yaw) * ((self.speed_forward / 1000) * 0.1);
+
+					self.flag.set_value_data("Walking", True);
 
 				if keyboard_manager.is_pressed("MoveBackward"):
 					self.position.x -= camera_manager.calcule_x_from_angle(self.yaw) * ((self.speed_backward / 1000) * 0.1);
 					self.position.z -= camera_manager.calcule_z_from_angle(self.yaw) * ((self.speed_backward / 1000) * 0.1);
 
+					self.flag.set_value_data("Walking", True);
+
 				if keyboard_manager.is_pressed("MoveStrafeLeft"):
 					self.position.x -= camera_manager.calcule_x_from_angle(self.yaw - 90) * ((self.speed_strafe / 1000) * 0.1);
 					self.position.z -= camera_manager.calcule_z_from_angle(self.yaw - 90) * ((self.speed_strafe / 1000) * 0.1);
 
+					self.flag.set_value_data("Walking", True);
+
 				if keyboard_manager.is_pressed("MoveStrafeRight"):
 					self.position.x += camera_manager.calcule_x_from_angle(self.yaw - 90) * ((self.speed_strafe / 1000) * 0.1);
 					self.position.z += camera_manager.calcule_z_from_angle(self.yaw - 90) * ((self.speed_strafe / 1000) * 0.1);
+
+					self.flag.set_value_data("Walking", True);
 
 				# Ai eu crio o normal se for pressionado, ai ele so vai vua e tals.
 				if keyboard_manager.is_pressed("MoveJump"):
@@ -217,15 +236,38 @@ class EntityPlayer(Entity):
 					self.speed_forward  = lerp(self.speed_forward, 600, delta_time);
 					self.speed_backward = lerp(self.speed_backward, 220, delta_time);
 					self.speed_strafe   = lerp(self.speed_strafe, 300, delta_time);
+
+					self.flag.set_value_data("Walking", True);
 				else:
-					self.speed_forward  = lerp(self.speed_forward, 300, delta_time);
-					self.speed_backward = lerp(self.speed_backward, 200, delta_time);
-					self.speed_strafe   = lerp(self.speed_strafe, 250, delta_time);
+					# Seria a fisica.
+					if self.flag.get("OnGround") or self.flag.get("Flying"):
+						self.speed_forward  = lerp(self.speed_forward, 300, delta_time);
+						self.speed_backward = lerp(self.speed_backward, 200, delta_time);
+						self.speed_strafe   = lerp(self.speed_strafe, 250, delta_time);
+					else:
+						self.speed_forward  = lerp(self.speed_forward, 100, delta_time);
+						self.speed_backward = lerp(self.speed_backward, 50, delta_time);
+						self.speed_strafe   = lerp(self.speed_strafe, 75, delta_time);
 
-
-	def world_update(self):
+	def world_update(self, the_world):
 		if self.rendering:
 			self.speed = sqrt(self.speed_forward * self.speed_forward + self.speed_backward + self.speed_strafe * self.speed_strafe);
+
+			if not self.flag.get("OnGround") and not self.flag.get("Flying"):
+				self.delta_time = self.wait_for_delta_time.current_ticks() / 100;
+			else:
+				self.wait_for_delta_time.reset();
+
+				self.delta_time = 0;
+
+			if self.physhic and not self.flag.get("Flying"):
+				self.angle, self.velocity = add_angle_length(self.angle, self.velocity, pi, the_world.gravity);
+
+				self.position.y -= cos(self.angle) * self.velocity;
+
+				self.velocity *= self.ampl;
+			else:
+				self.velocity = 0;
 
 	def render(self):
 		if (self.rendering):

@@ -11,9 +11,9 @@ class Skybox:
 	y = 0;
 	z = 0;
 
-	w = 2048;
-	h = 2048;
-	l = 2048;
+	w = 4096;
+	h = 4096;
+	l = 4096;
 
 	def __init__(self, path):
 		self.textures = {};

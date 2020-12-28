@@ -25,6 +25,7 @@ from os import path;
 import keyboard;
 import game_gui;
 import game_settings;
+import world;
 
 NAME    = "pintão craft cobra "
 VERSION = "0.0.2";
@@ -83,8 +84,6 @@ class Main:
 
 		self.camera_manager.focused = True;
 
-		self.loaded_entity_list = [];
-
 		self.entity_manager_ = entity_manager.EntityManager(self);
 
 		overlay.SPLIT = 0;
@@ -101,13 +100,15 @@ class Main:
 
 		self.cancel_render_3D = False;
 
+		self.world = world.World(self);
+
 		# Tem que cria o player.
 		self.player = entity.EntityPlayer("Player", "Player", "Ngga");
 		self.player.init();
 		self.player.set_camera(True);
 		self.player.fly = True;
 
-		self.loaded_entity_list.append(self.player);
+		self.world.implement_entity(self.player);
 
 		# Tem que inisia, eu posso fazer um sistema de salvar keybinds,
 		# mas isso nao vai ser taooo nesssesario agora, entao fica assim!
@@ -202,8 +203,6 @@ class Main:
 				self.gui_manager.update_click_down(current_event.button);
 
 			if self.gui_manager.get("MainMenu").active == False:
-				self.gui_manager.current_gui = None;
-
 				if self.gui_manager.current_gui != self.gui_manager.get("GamePaused"):
 					self.entity_manager_.on_update_event(current_event);
 
@@ -212,17 +211,37 @@ class Main:
 						self.gui_manager.open(game_gui.KEYBIND_GUI[current_event.key]);
 					except:
 						pass
+						# minecaftkkk
+
+		try:
+			print(self.gui_manager.current_gui.tag);
+		except:
+			pass
+
+		keys = pygame.key.get_pressed();
+
+		# So pra ajudar a volta no 0, 0, 0 caso cair no fundo do mapa ou etc.
+		if keys[pygame.K_r]:
+			# sim eu sei que esta com a camera, mas vai!
+			if self.player.camera():
+				# nao e estatica, mas tem como k
+				self.camera_manager.set_pos(0, 0, 0);
 
 		if self.gui_manager.current_gui != self.gui_manager.get("GamePaused"):
 			self.entity_manager_.on_update();
-			self.entity_manager_.on_world_update();
+			self.entity_manager_.on_world_update(self.world);
 			self.camera_manager.update_camera();
+
+		self.gui_manager.current_gui = None;
+
+		print(self.gui_manager.current_gui);
 
 	def render_3D(self):
 		# ok liguei a lista criada na classe skybox que renderiza tudo.
 		self.skybox.on_render();
-		self.entity_manager_.on_render();
 
+		# Fovdase?
+		self.entity_manager_.on_render();
 		self.block.on_render();
 
 	def render_2D(self):
