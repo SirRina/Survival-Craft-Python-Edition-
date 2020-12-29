@@ -4,7 +4,7 @@
 # Main class and game client initializer.
 #
 
-from api.util import lerp, Vec, CustomTextRender, clamp;
+from api.util import lerp, Vec, CustomTextRender, clamp, rina;
 
 from OpenGL import GL as GL11, GLU;
 
@@ -27,7 +27,7 @@ import game_gui;
 import game_settings;
 import world;
 
-NAME    = "pintão craft cobra "
+NAME    = "MinecraftkkkEmPython pora para de muda"
 VERSION = "0.0.2";
 
 SHOW_VERSION = True;
@@ -70,7 +70,7 @@ class Main:
 
 		self.camera_manager   = camera.CameraManager(self);
 		self.overlay_manager  = overlay.OverlayManager(CURRENT_OPENGL = GL11, main = self);
-		self.gui_manager      = guiscreen.GUIManager();
+		self.gui_manager      = guiscreen.GUIManager(self);
 		self.keyboard_manager = keyboard.KeyBindingManager();
 
 		self.clock = pygame.time.Clock();
@@ -91,7 +91,7 @@ class Main:
 		self.background = [190, 190, 190];
 
 		# O skybox ou seja aquele bagulho do ceu, incesto insano
-		self.skybox = skybox.Skybox("src/textures/skybox");
+		self.skybox = skybox.Skybox("textures/skybox/");
 		self.skybox.prepare();
 
 		self.gui_manager.add(game_gui.GamePaused(self));
@@ -121,7 +121,8 @@ class Main:
 		# por que se nao da errokkk
 		# ou seja, eu preciso cancelar o render 3D
 		# depois que a variavel foi criada.
-		self.gui_manager.get("MainMenu").open();
+		self.gui_manager.open("MainMenu");
+		self.gui_manager.current_gui = self.gui_manager.get("MainMenu");
 
 		self.block = block.Block("qwwqd");
 
@@ -180,7 +181,7 @@ class Main:
 			pygame.display.flip();
 
 	def init_keys(self):
-		# teclado
+		# menstruasao do tevlado
 		self.keyboard_manager.add("MoveForward", pygame.K_w);
 		self.keyboard_manager.add("MoveBackward", pygame.K_s);
 		self.keyboard_manager.add("MoveStrafeLeft", pygame.K_a);
@@ -203,8 +204,6 @@ class Main:
 				self.gui_manager.update_click_down(current_event.button);
 
 			if self.gui_manager.get("MainMenu").active == False:
-				self.gui_manager.current_gui = None;
-
 				if self.gui_manager.current_gui != self.gui_manager.get("GamePaused"):
 					self.entity_manager_.on_update_event(current_event);
 
@@ -215,11 +214,6 @@ class Main:
 						pass
 						# minecaftkkk
 
-		try:
-			print(self.gui_manager.current_gui.tag);
-		except:
-			pass
-
 		keys = pygame.key.get_pressed();
 
 		# So pra ajudar a volta no 0, 0, 0 caso cair no fundo do mapa ou etc.
@@ -228,6 +222,9 @@ class Main:
 			if self.player.camera():
 				# nao e estatica, mas tem como k
 				self.camera_manager.set_pos(0, 0, 0);
+
+				# Meu amigro negro
+				self.player.velocity = 0;
 
 		if self.gui_manager.current_gui != self.gui_manager.get("GamePaused"):
 			self.entity_manager_.on_update();

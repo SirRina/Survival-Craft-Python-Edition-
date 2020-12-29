@@ -18,6 +18,10 @@ class GamePaused(guiscreen.GUI):
 		self.main = main;
 
 	def closed(self):
+		# Precisa fazer isso so aqui, no toggle e close do manager ja faz... 
+		# Mas sempre no comeso.
+		self.main.gui_manager.refresh_current_GUI();
+
 		pygame.mouse.set_pos(self.main.screen_width / 2, self.main.screen_height / 2);
 
 		self.main.camera_manager.focused = True;
@@ -50,6 +54,8 @@ class MainMenu(guiscreen.GUI):
 		self.start = False;
 
 	def closed(self):
+		self.main.gui_manager.refresh_current_GUI();
+
 		pygame.mouse.set_pos(self.main.screen_width / 2, self.main.screen_height / 2);
 
 		self.main.camera_manager.focused = True;
@@ -61,6 +67,7 @@ class MainMenu(guiscreen.GUI):
 
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		GL11.glClearColor(float(self.main.background[0] / 255.0), float(self.main.background[1] / 255.0), float(self.main.background[2] / 255.0), 1.0);
+
 
 	def opened(self):
 		overlay.SPLIT     = 0;

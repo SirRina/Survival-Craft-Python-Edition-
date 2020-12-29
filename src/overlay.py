@@ -39,4 +39,4 @@ class OverlayManager:
 
 			self.main.font_renderer.draw("FPS: " + str(int(self.main.clock.get_fps())), 10, height * 1, [0, 0, 0]);
 			self.main.font_renderer.draw("POS: " + str(int(self.main.camera_manager.position.x)) + " " + str(int(self.main.camera_manager.position.y)) + " " + str(int(self.main.camera_manager.position.z)), 10, (height + 1) * 2, [0, 0, 0]);
-			self.main.font_renderer.draw("GPU: " + str(GL11.glGetString(GL11.GL_VERSION)), 10, (height + 1) * 3, [0, 0, 0]);
+			self.main.font_renderer.draw("GPU: " + str(GL11.glGetString(GL11.GL_VERSION)), 10, (height + 1) * 3, [0, 255, 0]);

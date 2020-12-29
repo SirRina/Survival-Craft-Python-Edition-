@@ -1,3 +1,5 @@
+import pygame;
+
 # Preciso fazer um GUI manager seja, main menu, inventorio, ou que se foda.
 
 class GUI:
@@ -42,9 +44,11 @@ class GUI:
 		override = True;
 
 class GUIManager:
-	def __init__(self):
+	def __init__(self, main):
 		self.list_gui    = [];
-		self.current_gui = None; 
+		self.current_gui = None;
+
+		self.main = main;
 
 	def add(self, gui):
 		self.list_gui.append(gui);
@@ -57,8 +61,6 @@ class GUIManager:
 		return None;
 
 	def reload_all_gui_to_close(self):
-		self.current_gui = None;
-
 		for guis in self.list_gui:
 			guis.close();
 
@@ -75,34 +77,37 @@ class GUIManager:
 		_gui = self.get(gui);
 
 		if (None != type(_gui)):
+			self.current_gui = _gui;
+
 			if not _gui.active:
 				self.reload_all_gui_to_close_and_open(_gui);
 
 				_gui.open();
 
-			self.current_gui = _gui;
+	def close(self, gui):
+		_gui = self.get(gui);
+
+		if (None != type(_gui)):
+			self.current_gui = None;
+
+			self.reload_all_gui_to_close();
+
+			if _gui.active:
+				_gui.close();
 
 	def toggle(self, gui):
 		_gui = self.get(gui);
 
 		if (None != type(_gui)):
-			if _gui.active == False:
-				self.reload_all_gui_to_close();
-				
-				_gui.open();
-
-				self.current_gui = _gui;
+			if _gui.active == False:				
+				self.open(_gui);
 			else:
-				_gui.close();
+				self.close(_gui);
 
-	def close(self, gui):
-		_gui = self.get(gui);
+	def refresh_current_GUI(self):
+		pygame.mouse.set_pos(self.main.screen_width / 2, self.main.screen_height / 2);
 
-		if (None != type(_gui)):
-			self.reload_all_gui_to_close();
-
-			if _gui.active:
-				_gui.close();
+		self.current_gui = None;
 
 	def update_click_up(self, button):
 		for guis in self.list_gui:
