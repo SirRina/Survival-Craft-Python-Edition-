@@ -10,7 +10,7 @@ import time;
 import OpenGL.GL  as GL11;
 import OpenGL.GLU as GLU;
 
-from math import sqrt;
+from math import sqrt, cos, sin, pi, atan2, hypot;
 
 class Vec:
 	def __init__(self, x, y, z):
@@ -31,7 +31,7 @@ class Vec:
 		return [self.x, self.y, self.z];
 
 	def length(self):
-		return sqrt(self.x * self.x + self.y + self.z * self.z);
+		return sqrt(self.x * self.x + self.y * self.y + self.z * self.z);
 
 	def __add__(self, num):
 		if type(num) is Vec:
@@ -57,11 +57,24 @@ class Vec:
 	def __neg__(self):
 		return Vec(-self.x, -self.y, -self.z);
 
+def rina(v, vv):
+	l = vv.length();
+
+	return Vec(v.x * l, v.y * l, v.z * l);
+
 def lerp(a, b, partial):
 	return (a + (b - a) * partial);
 
 def clamp(value, minimum, maximum):
 	return (value if value <= maximum else maximum) if value >= minimum else minimum;
+
+def add_angle_length(a, l, aa, ll):
+	x, y = sin(a) * l + sin(aa) * ll, cos(a) * l + cos(aa) * ll;
+
+	angle  = 0.5 * pi - atan2(x, y);
+	length = hypot(x, y);
+
+	return angle, length; 
 
 def convert_to_texture(surface):
 	w = surface.get_width();
@@ -116,28 +129,31 @@ class CustomTextRender(object):
 		data          = pygame.image.tostring(surface_text, "RGBA");
 		width, height = surface_text.get_size();
 
-		id = GL11.glGenTextures(1)
+		GL11.glPushMatrix();
+
+		id = GL11.glGenTextures(1);
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, id)
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, id);
 		
 		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST)
 		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST)
 
-		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data)			
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0)
+		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data)	;		
 
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glColor(color[0] / 255.0, color[1] / 255.0, color[2] / 255.0, 0.5);
 
-		GL11.glEnable(GL11.GL_BLEND)
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, id)
-		GL11.glBegin(GL11.GL_QUADS)
-		GL11.glTexCoord(0, 0); GL11.glVertex(x, y, 0)
-		GL11.glTexCoord(0, 1); GL11.glVertex(x, y + height, 0)
-		GL11.glTexCoord(1, 1); GL11.glVertex(x + width, y + height, 0)
-		GL11.glTexCoord(1, 0); GL11.glVertex(x + width, y, 0)
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+		GL11.glColor(color[0] / 255.0, color[1] / 255.0, color[2] / 255.0, 1);
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord(0, 0); GL11.glVertex(x, y, 0);
+		GL11.glTexCoord(0, 1); GL11.glVertex(x, y + height, 0);
+		GL11.glTexCoord(1, 1); GL11.glVertex(x + width, y + height, 0);
+		GL11.glTexCoord(1, 0); GL11.glVertex(x + width, y, 0);
 		GL11.glEnd();
 
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
@@ -145,6 +161,8 @@ class CustomTextRender(object):
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
+
+		GL11.glPopMatrix();
 
 # NEgro.
 class AABB:

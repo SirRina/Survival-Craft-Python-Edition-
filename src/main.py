@@ -4,7 +4,7 @@
 # Main class and game client initializer.
 #
 
-from api.util import lerp, Vec, CustomTextRender, clamp;
+from api.util import lerp, Vec, CustomTextRender, clamp, rina;
 
 from OpenGL import GL as GL11, GLU;
 
@@ -25,8 +25,9 @@ from os import path;
 import keyboard;
 import game_gui;
 import game_settings;
+import world;
 
-NAME    = "pintão craft cobra "
+NAME    = "MinecraftkkkEmPython pora para de muda"
 VERSION = "0.0.2";
 
 SHOW_VERSION = True;
@@ -69,7 +70,7 @@ class Main:
 
 		self.camera_manager   = camera.CameraManager(self);
 		self.overlay_manager  = overlay.OverlayManager(CURRENT_OPENGL = GL11, main = self);
-		self.gui_manager      = guiscreen.GUIManager();
+		self.gui_manager      = guiscreen.GUIManager(self);
 		self.keyboard_manager = keyboard.KeyBindingManager();
 
 		self.clock = pygame.time.Clock();
@@ -83,8 +84,6 @@ class Main:
 
 		self.camera_manager.focused = True;
 
-		self.loaded_entity_list = [];
-
 		self.entity_manager_ = entity_manager.EntityManager(self);
 
 		overlay.SPLIT = 0;
@@ -92,7 +91,7 @@ class Main:
 		self.background = [190, 190, 190];
 
 		# O skybox ou seja aquele bagulho do ceu, incesto insano
-		self.skybox = skybox.Skybox("src/textures/skybox");
+		self.skybox = skybox.Skybox("textures/skybox/");
 		self.skybox.prepare();
 
 		self.gui_manager.add(game_gui.GamePaused(self));
@@ -101,13 +100,15 @@ class Main:
 
 		self.cancel_render_3D = False;
 
+		self.world = world.World(self);
+
 		# Tem que cria o player.
 		self.player = entity.EntityPlayer("Player", "Player", "Ngga");
 		self.player.init();
 		self.player.set_camera(True);
 		self.player.fly = True;
 
-		self.loaded_entity_list.append(self.player);
+		self.world.implement_entity(self.player);
 
 		# Tem que inisia, eu posso fazer um sistema de salvar keybinds,
 		# mas isso nao vai ser taooo nesssesario agora, entao fica assim!
@@ -120,7 +121,8 @@ class Main:
 		# por que se nao da errokkk
 		# ou seja, eu preciso cancelar o render 3D
 		# depois que a variavel foi criada.
-		self.gui_manager.get("MainMenu").open();
+		self.gui_manager.open("MainMenu");
+		self.gui_manager.current_gui = self.gui_manager.get("MainMenu");
 
 		self.block = block.Block("qwwqd");
 
@@ -179,7 +181,7 @@ class Main:
 			pygame.display.flip();
 
 	def init_keys(self):
-		# teclado
+		# menstruasao do tevlado
 		self.keyboard_manager.add("MoveForward", pygame.K_w);
 		self.keyboard_manager.add("MoveBackward", pygame.K_s);
 		self.keyboard_manager.add("MoveStrafeLeft", pygame.K_a);
@@ -202,8 +204,6 @@ class Main:
 				self.gui_manager.update_click_down(current_event.button);
 
 			if self.gui_manager.get("MainMenu").active == False:
-				self.gui_manager.current_gui = None;
-
 				if self.gui_manager.current_gui != self.gui_manager.get("GamePaused"):
 					self.entity_manager_.on_update_event(current_event);
 
@@ -212,17 +212,31 @@ class Main:
 						self.gui_manager.open(game_gui.KEYBIND_GUI[current_event.key]);
 					except:
 						pass
+						# minecaftkkk
+
+		keys = pygame.key.get_pressed();
+
+		# So pra ajudar a volta no 0, 0, 0 caso cair no fundo do mapa ou etc.
+		if keys[pygame.K_r]:
+			# sim eu sei que esta com a camera, mas vai!
+			if self.player.camera():
+				# nao e estatica, mas tem como k
+				self.camera_manager.set_pos(0, 0, 0);
+
+				# Meu amigro negro
+				self.player.velocity = 0;
 
 		if self.gui_manager.current_gui != self.gui_manager.get("GamePaused"):
 			self.entity_manager_.on_update();
-			self.entity_manager_.on_world_update();
+			self.entity_manager_.on_world_update(self.world);
 			self.camera_manager.update_camera();
 
 	def render_3D(self):
 		# ok liguei a lista criada na classe skybox que renderiza tudo.
 		self.skybox.on_render();
-		self.entity_manager_.on_render();
 
+		# Fovdase?
+		self.entity_manager_.on_render();
 		self.block.on_render();
 
 	def render_2D(self):
