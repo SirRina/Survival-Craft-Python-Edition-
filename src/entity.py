@@ -245,9 +245,9 @@ class EntityPlayer(Entity):
 						self.speed_backward = lerp(self.speed_backward, 200, delta_time);
 						self.speed_strafe   = lerp(self.speed_strafe, 250, delta_time);
 					else:
-						self.speed_forward  = lerp(self.speed_forward, 100, delta_time);
-						self.speed_backward = lerp(self.speed_backward, 50, delta_time);
-						self.speed_strafe   = lerp(self.speed_strafe, 75, delta_time);
+						self.speed_forward  = lerp(self.speed_forward, 150, delta_time);
+						self.speed_backward = lerp(self.speed_backward, 75, delta_time);
+						self.speed_strafe   = lerp(self.speed_strafe, 100, delta_time);
 
 	def world_update(self, the_world):
 		if self.rendering:

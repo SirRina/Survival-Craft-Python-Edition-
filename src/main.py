@@ -203,6 +203,8 @@ class Main:
 				self.gui_manager.update_click_down(current_event.button);
 
 			if self.gui_manager.get("MainMenu").active == False:
+				self.gui_manager.current_gui = None;
+
 				if self.gui_manager.current_gui != self.gui_manager.get("GamePaused"):
 					self.entity_manager_.on_update_event(current_event);
 
@@ -231,10 +233,6 @@ class Main:
 			self.entity_manager_.on_update();
 			self.entity_manager_.on_world_update(self.world);
 			self.camera_manager.update_camera();
-
-		self.gui_manager.current_gui = None;
-
-		print(self.gui_manager.current_gui);
 
 	def render_3D(self):
 		# ok liguei a lista criada na classe skybox que renderiza tudo.

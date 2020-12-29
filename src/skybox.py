@@ -19,7 +19,7 @@ class Skybox:
 		self.textures = {};
 
 		for sides in ["back", "down", "front", "left", "right", "up"]:
-			filePath = os.path.join(os.path.abspath("src/textures/skybox/" + sides));
+			filePath = os.path.join(os.path.abspath("textures/skybox/" + sides));
 			self.textures[sides] = convert_to_texture(pygame.image.load(filePath + ".png"));
 
 		self.list = GL11.glGenLists(1);

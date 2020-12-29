@@ -62,13 +62,23 @@ class GUIManager:
 		for guis in self.list_gui:
 			guis.close();
 
+	def reload_all_gui_to_close_and_open(self, gui):
+		self.current_gui = None;
+
+		for guis in self.list_gui:
+			if guis != gui:
+				guis.close();
+			else:
+				guis.open();
+
 	def open(self, gui):
 		_gui = self.get(gui);
 
 		if (None != type(_gui)):
-			self.reload_all_gui_to_close();
+			if not _gui.active:
+				self.reload_all_gui_to_close_and_open(_gui);
 
-			_gui.open();
+				_gui.open();
 
 			self.current_gui = _gui;
 
@@ -76,9 +86,9 @@ class GUIManager:
 		_gui = self.get(gui);
 
 		if (None != type(_gui)):
-			self.reload_all_gui_to_close();
-
 			if _gui.active == False:
+				self.reload_all_gui_to_close();
+				
 				_gui.open();
 
 				self.current_gui = _gui;
@@ -91,7 +101,8 @@ class GUIManager:
 		if (None != type(_gui)):
 			self.reload_all_gui_to_close();
 
-			_gui.close();
+			if _gui.active:
+				_gui.close();
 
 	def update_click_up(self, button):
 		for guis in self.list_gui:
