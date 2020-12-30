@@ -96,6 +96,7 @@ class MainMenu(guiscreen.GUI):
 				self.main.background[2] = 190;
 
 				self.close();
+
 				self.start = False;
 
 class Inventory(guiscreen.GUI):
