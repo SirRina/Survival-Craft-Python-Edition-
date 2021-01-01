@@ -91,7 +91,7 @@ class Main:
 		self.background = [190, 190, 190];
 
 		# O skybox ou seja aquele bagulho do ceu, incesto insano
-		self.skybox = skybox.Skybox("textures/skybox/");
+		self.skybox = skybox.Skybox("src/textures/skybox/");
 		self.skybox.prepare();
 
 		self.gui_manager.add(game_gui.GamePaused(self));
