@@ -34,8 +34,8 @@ SHOW_VERSION = True;
 START        = True;
 
 class Main:
-	screen_width  = 1280;
-	screen_height = 720;
+	screen_width  = 800;
+	screen_height = 600;
 
 	def __init__(self):
 		pygame.init();
@@ -91,7 +91,7 @@ class Main:
 		self.background = [190, 190, 190];
 
 		# O skybox ou seja aquele bagulho do ceu, incesto insano
-		self.skybox = skybox.Skybox("src/textures/skybox/");
+		self.skybox = skybox.Skybox("textures/skybox/");
 		self.skybox.prepare();
 
 		self.gui_manager.add(game_gui.GamePaused(self));
@@ -101,6 +101,7 @@ class Main:
 		self.cancel_render_3D = False;
 
 		self.world = world.World(self);
+		self.world.load_chunk(20);
 
 		# Tem que cria o player.
 		self.player = entity.EntityPlayer("Player", "Player", "Ngga");
@@ -124,9 +125,7 @@ class Main:
 		self.gui_manager.open("MainMenu");
 		self.gui_manager.current_gui = self.gui_manager.get("MainMenu");
 
-		self.block = block.Block("qwwqd");
-
-		# Aplicamos o OPENGL.
+		# Iniciamos o OpenGL e os estados e projecoes da matrix.
 		GL11.glClearDepth(1)
 
 		GL11.glViewport(0, 0, self.screen_width, self.screen_height);
@@ -233,11 +232,11 @@ class Main:
 
 	def render_3D(self):
 		# ok liguei a lista criada na classe skybox que renderiza tudo.
-		self.skybox.on_render();
+		#self.skybox.on_render();
 
 		# Fovdase?
 		self.entity_manager_.on_render();
-		self.block.on_render();
+		self.world.update_render_3d();
 
 	def render_2D(self):
 		self.overlay_manager.on_render();
@@ -245,5 +244,4 @@ class Main:
 
 if (__name__ == "__main__"):
 	game = Main();
-
 	game.do_run();

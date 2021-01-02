@@ -1,10 +1,25 @@
 from entity import EntityPlayer;
 
+import block;
+
 class World:
 	def __init__(self, main):
 		self.main               = main;
 		self.loaded_entity_list = [];
 		self.gravity            = 0.001;
+
+		self.chunk = [];
+
+	def load_chunk(self, size):
+		# Limpamos a chunk atual.
+		self.chunk.clear();
+
+		# Aqui vamos criar uns bloquinhos e bem simples mesmo, so para testar chunk.
+		for s in range(size):
+			_block = block.Block("dirty", "textures/blocks/");
+			_block.aabb.min.x, _block.aabb.min.y, _block.aabb.min.z = s - 1, 1, 1;
+
+			self.chunk.append(_block);
 
 	def implement_entity(self, entity):
 		if EntityPlayer == type(entity):
@@ -28,3 +43,11 @@ class World:
 		for entities in self.loaded_entity_list:
 			if entities.tag == entity_tag:
 				return entities;
+
+	def update_render_3d(self):
+		for blocks in self.chunk:
+			if self.main.player.camera():
+				if blocks.camera_in(self.main.camera_manager):
+					print("w")
+
+			blocks.on_render();
