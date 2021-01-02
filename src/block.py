@@ -1,6 +1,5 @@
-from api.util import AABB, convert_to_texture;
-
 from OpenGL import GL as GL11;
+from api    import util;
 
 import os;
 
@@ -39,7 +38,13 @@ FACES = {
 class Block:
 	def __init__(self, name, current_path_textures = None):
 		self.name = name;
-		self.aabb = AABB();
+		self.aabb = util.AABB();
+
+		self.position = util.Vec(0.0, 0.0, 0.0);
+
+		# blocos na teoria tem yaw e pitch simmm.
+		self.yaw   = 0;
+		self.pitch = 0;
 
 		self.aabb.max.x = 1;
 		self.aabb.max.y = 1;
@@ -58,10 +63,9 @@ class Block:
 
 				path = os.path.join(os.path.abspath(current_path_textures + name + "_" + face_name_requested));
 
-				self.textures[face_name_requested] = convert_to_texture(pygame.image.load(path + ".png"));
+				self.textures[face_name_requested] = util.convert_to_texture(pygame.image.load(path + ".png"));
 
 		GL11.glNewList(self.render_list, GL11.GL_COMPILE);
-		
 		GL11.glColor(1, 1, 1);
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -143,13 +147,13 @@ class Block:
 
 		GL11.glEndList();
 
-	# No caso o min e maz AABB colisao fodase.
-	def camera_in(self, camera):
-		return (camera.position.x + camera.CAMERA_LENGHT >= self.aabb.min.x and camera.position.x - camera.CAMERA_LENGHT <= self.aabb.max.x) and \
-			   (camera.position.y + camera.CAMERA_LENGHT >= self.aabb.min.y and camera.position.y - camera.CAMERA_LENGHT <= self.aabb.max.y) and \
-			   (camera.position.z + camera.CAMERA_LENGHT >= self.aabb.min.z and camera.position.z - camera.CAMERA_LENGHT <= self.aabb.max.z);
-
 	def on_render(self):
+		self.aabb.min.x = self.position.x;
+		self.aabb.min.y = self.position.y;
+		self.aabb.min.z = self.position.z;
+
+		print(self.aabb.min.x + self.aabb.max.x);
+
 		# aqui eu desenho a pora, o que e pora;
 		GL11.glPushMatrix();
 		GL11.glTranslate(self.aabb.min.x, self.aabb.min.y, self.aabb.min.z);

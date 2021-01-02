@@ -1,5 +1,5 @@
-from api.util import Vec, lerp, clamp;
-from math     import sin, cos, sqrt, degrees, radians, pi;
+from math import sin, cos, sqrt, degrees, radians, pi;
+from api  import util;
 
 import pygame, OpenGL.GL as GL11;
 
@@ -10,7 +10,8 @@ class CameraManager:
 	CAMERA_LENGHT = 0.2;
 
 	def __init__(self, main):
-		self.position = Vec(0, 0, 0);
+		self.position = util.Vec(0, 0, 0);
+		self.camera   = util.Vec(1, 1, 1); # aqui e a largura da camera em vetor.
 
 		self.yaw   = 60;
 		self.pitch = 0;
@@ -83,8 +84,8 @@ class CameraManager:
 		GL11.glRotate(360 - self.yaw, 0, 1, 0);
 
 		# el ogro
-		self.x = lerp(self.x, self.position.x, self.main.partial_ticks);
-		self.y = lerp(self.y, self.position.y, self.main.partial_ticks);
-		self.z = lerp(self.z, self.position.z, self.main.partial_ticks);
+		self.x = util.lerp(self.x, self.position.x, self.main.partial_ticks);
+		self.y = util.lerp(self.y, self.position.y, self.main.partial_ticks);
+		self.z = util.lerp(self.z, self.position.z, self.main.partial_ticks);
 
-		GL11.glTranslate(self.x, self.y, self.z);
+		GL11.glTranslate(-self.x, -self.y, -self.z);

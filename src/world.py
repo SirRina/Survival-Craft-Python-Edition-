@@ -1,6 +1,7 @@
-from entity import EntityPlayer;
+from api import util;
 
 import block;
+import entity;
 
 class World:
 	def __init__(self, main):
@@ -17,27 +18,27 @@ class World:
 		# Aqui vamos criar uns bloquinhos e bem simples mesmo, so para testar chunk.
 		for s in range(size):
 			_block = block.Block("dirty", "textures/blocks/");
-			_block.aabb.min.x, _block.aabb.min.y, _block.aabb.min.z = s - 1, 1, 1;
+			_block.position.x, _block.position.y, _block.position.z = 1, 1, 1;
 
 			self.chunk.append(_block);
 
-	def implement_entity(self, entity):
-		if EntityPlayer == type(entity):
-			self.loaded_entity_list.append(entity);
+	def implement_entity(self, _ent):
+		if entity.EntityPlayer == type(_ent):
+			self.loaded_entity_list.append(_ent);
 
-	def kill_entity(self, entity):
-		if EntityPlayer == type(entity):
-			self.get_entity(entity.tag).set_living(False);
+	def kill_entity(self, _ent):
+		if entity.EntityPlayer == type(_ent):
+			self.get_entity(_ent.tag).set_living(False);
 
-	def spawn_entity(self, entity, position):
+	def spawn_entity(self, _ent, position):
 		# nao podemos spanawe algo vivido.
-		if EntityPlayer == type(entity) and not entity.is_living():
-			self.get_entity(entity.tag).set_living(True);
+		if entity.EntityPlayer == type(_ent) and not _ent.is_living():
+			self.get_entity(_ent.tag).set_living(True);
 
 			# sim pernas de pau.
-			self.get_entity(entity.tag).position.x = position[0];
-			self.get_entity(entity.tag).position.y = position[1];
-			self.get_entity(entity.tag).position.z = position[2];
+			self.get_entity(_ent.tag).position.x = position[0];
+			self.get_entity(_ent.tag).position.y = position[1];
+			self.get_entity(_ent.tag).position.z = position[2];
 
 	def get_entity(self, entity_tag):
 		for entities in self.loaded_entity_list:
@@ -47,7 +48,9 @@ class World:
 	def update_render_3d(self):
 		for blocks in self.chunk:
 			if self.main.player.camera():
-				if blocks.camera_in(self.main.camera_manager):
-					print("w")
+				if util.collide_aabb_entity(blocks.aabb, self.main.player):
+					print("Rodi")
+				else:
+					print("re")
 
 			blocks.on_render();

@@ -48,6 +48,10 @@ class EntityPlayer(Entity):
 		self.physhic = True;
 		self.fly     = True;
 
+		# Dimensoes do peixe.
+		self.width  = 0.5;
+		self.height = 2;
+
 		# Massa e delta time,
 		self.delta_time = 0;
 		self.ampl       = 0.999;
@@ -182,26 +186,26 @@ class EntityPlayer(Entity):
 				self.flag.set_value_data("Walking", False);
 
 				if keyboard_manager.is_pressed("MoveForward"):
-					self.position.x += camera_manager.calcule_x_from_angle(self.yaw) * ((self.speed_forward / 1000) * 0.1);
-					self.position.z += camera_manager.calcule_z_from_angle(self.yaw) * ((self.speed_forward / 1000) * 0.1);
+					self.position.x -= camera_manager.calcule_x_from_angle(self.yaw) * ((self.speed_forward / 1000) * 0.1);
+					self.position.z -= camera_manager.calcule_z_from_angle(self.yaw) * ((self.speed_forward / 1000) * 0.1);
 
 					self.flag.set_value_data("Walking", True);
 
 				if keyboard_manager.is_pressed("MoveBackward"):
-					self.position.x -= camera_manager.calcule_x_from_angle(self.yaw) * ((self.speed_backward / 1000) * 0.1);
-					self.position.z -= camera_manager.calcule_z_from_angle(self.yaw) * ((self.speed_backward / 1000) * 0.1);
+					self.position.x += camera_manager.calcule_x_from_angle(self.yaw) * ((self.speed_backward / 1000) * 0.1);
+					self.position.z += camera_manager.calcule_z_from_angle(self.yaw) * ((self.speed_backward / 1000) * 0.1);
 
 					self.flag.set_value_data("Walking", True);
 
 				if keyboard_manager.is_pressed("MoveStrafeLeft"):
-					self.position.x -= camera_manager.calcule_x_from_angle(self.yaw - 90) * ((self.speed_strafe / 1000) * 0.1);
-					self.position.z -= camera_manager.calcule_z_from_angle(self.yaw - 90) * ((self.speed_strafe / 1000) * 0.1);
+					self.position.x += camera_manager.calcule_x_from_angle(self.yaw - 90) * ((self.speed_strafe / 1000) * 0.1);
+					self.position.z += camera_manager.calcule_z_from_angle(self.yaw - 90) * ((self.speed_strafe / 1000) * 0.1);
 
 					self.flag.set_value_data("Walking", True);
 
 				if keyboard_manager.is_pressed("MoveStrafeRight"):
-					self.position.x += camera_manager.calcule_x_from_angle(self.yaw - 90) * ((self.speed_strafe / 1000) * 0.1);
-					self.position.z += camera_manager.calcule_z_from_angle(self.yaw - 90) * ((self.speed_strafe / 1000) * 0.1);
+					self.position.x -= camera_manager.calcule_x_from_angle(self.yaw - 90) * ((self.speed_strafe / 1000) * 0.1);
+					self.position.z -= camera_manager.calcule_z_from_angle(self.yaw - 90) * ((self.speed_strafe / 1000) * 0.1);
 
 					self.flag.set_value_data("Walking", True);
 
@@ -214,11 +218,11 @@ class EntityPlayer(Entity):
 					# mesma coisa aqui, ok voce pode so fazer mc.player.isFly = true;
 					# mas isso nao e eficaz, quer dizer e..., mas em questoes de jogo!
 					if self.fly and self.flag.get("Flying"):
-						self.position.y -= (self.speed_fly / 1000) * delta_time;
+						self.position.y += (self.speed_fly / 1000) * delta_time;
 
 				if keyboard_manager.is_pressed("MoveCrouch"):
 					if self.fly and self.flag.get("Flying"):
-						self.position.y += (self.speed_fly / 1000) * delta_time;
+						self.position.y -= (self.speed_fly / 1000) * delta_time;
 
 				# Se por acaso a bind do sprint for igual ao do andar pra frente
 				# eu posso verificar se a bind do correr esta desligada caso 
@@ -263,7 +267,7 @@ class EntityPlayer(Entity):
 			if self.physhic and not self.flag.get("Flying"):
 				self.angle, self.velocity = add_angle_length(self.angle, self.velocity, pi, the_world.gravity);
 
-				self.position.y -= cos(self.angle) * self.velocity;
+				self.position.y += cos(self.angle) * self.velocity;
 
 				self.velocity *= self.ampl;
 			else:

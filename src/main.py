@@ -4,12 +4,12 @@
 # Main class and game client initializer.
 #
 
-from api.util import lerp, Vec, CustomTextRender, clamp, rina;
-
 from OpenGL import GL as GL11, GLU;
 
 import pygame;
 import time;
+
+from api import util;
 
 # Todos as fields daqui.
 import camera;
@@ -78,17 +78,13 @@ class Main:
 
 		self.clock.tick(self.fps);
 
-		self.font_renderer = CustomTextRender("Arial", 19);
-
-		self.last_delta_time = 0;
-
+		# Algumas coisas como peixes e negros.
+		self.font_renderer          = util.CustomTextRender("Arial", 19);
+		self.last_delta_time        = 0;
 		self.camera_manager.focused = True;
-
-		self.entity_manager_ = entity_manager.EntityManager(self);
-
-		overlay.SPLIT = 0;
-
-		self.background = [190, 190, 190];
+		self.entity_manager_        = entity_manager.EntityManager(self);
+		overlay.SPLIT               = 0;
+		self.background             = [190, 190, 190];
 
 		# O skybox ou seja aquele bagulho do ceu, incesto insano
 		self.skybox = skybox.Skybox("textures/skybox/");
@@ -101,7 +97,7 @@ class Main:
 		self.cancel_render_3D = False;
 
 		self.world = world.World(self);
-		self.world.load_chunk(20);
+		self.world.load_chunk(1);
 
 		# Tem que cria o player.
 		self.player = entity.EntityPlayer("Player", "Player", "Ngga");
@@ -174,7 +170,8 @@ class Main:
 	
 			GL11.glMatrixMode(GL11.GL_MODELVIEW);
 			GL11.glLoadIdentity();
-	
+
+			# vai se fuderkkkkk
 			GL11.glPopMatrix();
 
 			pygame.display.flip();
@@ -194,7 +191,9 @@ class Main:
 			if (current_event.type == pygame.QUIT):
 				pygame.quit();
 
-				quit();
+				# por que pedro perry.
+				quit(); # por que voce quit
+				# ele quitou...,
 
 			if current_event.type == pygame.MOUSEBUTTONUP:
 				self.gui_manager.update_click_up(current_event.button);
@@ -220,7 +219,7 @@ class Main:
 			# sim eu sei que esta com a camera, mas vai!
 			if self.player.camera():
 				# nao e estatica, mas tem como k
-				self.camera_manager.set_pos(0, 0, 0);
+				self.camera_manager.set_pos(1, 1, 1);
 
 				# Meu amigro negro
 				self.player.velocity = 0;

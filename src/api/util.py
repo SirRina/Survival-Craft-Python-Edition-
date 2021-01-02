@@ -76,6 +76,17 @@ def add_angle_length(a, l, aa, ll):
 
 	return angle, length; 
 
+# Rodrigo , pare .
+def collide_aabb(aabb, aabb2):
+	return (aabb.min.x >= aabb1.min.x and aabb.min.x + aabb.max.x <= aabb1.min.x + aabb1.max.x) and \
+		   (aabb.min.y >= aabb1.min.y and aabb.min.y + aabb.max.y <= aabb1.min.y + aabb1.max.y) and \
+		   (aabb.min.z >= aabb1.min.z and aabb.min.z + aabb.max.z <= aabb1.min.z + aabb1.max.z);
+
+def collide_aabb_entity(aabb, entity):
+	return (entity.position.x >= aabb.min.x and entity.position.x <= aabb.min.x + aabb.max.x) and \
+		   (entity.position.y >= aabb.min.y and entity.position.y - entity.height <= aabb.min.z + aabb.max.y) and \
+		   (entity.position.z >= aabb.min.z and entity.position.z <= aabb.min.z + aabb.max.z);
+
 def convert_to_texture(surface):
 	w = surface.get_width();
 	h = surface.get_height();
