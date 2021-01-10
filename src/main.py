@@ -33,6 +33,7 @@ VERSION = "0.0.2";
 SHOW_VERSION = True;
 START        = True;
 
+# oi oio  como eu vendo pessoas no python
 class Main:
 	screen_width  = 800;
 	screen_height = 600;
