@@ -5,6 +5,7 @@ import game_settings;
 
 import pygame;
 
+# oi
 class EntityManager:
 	def __init__(self, main):
 		self.main = main;
