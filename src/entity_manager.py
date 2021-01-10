@@ -34,7 +34,7 @@ class EntityManager:
 					entities.set_living(False);
 
 				if entities.is_spriting() and entities.camera() and not game_settings.CONFIG_STATIC_FOV:
-					new_fov = game_settings.CONFIG_FOV + ((entities.speed / 360) * pi if game_settings.DEV_FOV_BASED_ON_SPEED == True else game_settings.DEV_FOV)
+					new_fov = (game_settings.CONFIG_FOV + ((entities.speed / 360) * pi) + (1.5 if entities.is_flying() == True else 0) if game_settings.DEV_FOV_BASED_ON_SPEED == True else game_settings.DEV_FOV)
 
 					self.main.fov = lerp(self.main.fov, new_fov, self.main.partial_ticks);
 				else:

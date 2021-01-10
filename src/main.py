@@ -79,7 +79,7 @@ class Main:
 		self.clock.tick(self.fps);
 
 		# Algumas coisas como peixes e negros.
-		self.font_renderer          = util.CustomTextRender("Arial", 19);
+		self.font_renderer          = util.CustomTextRender("Whitney", 19);
 		self.last_delta_time        = 0;
 		self.camera_manager.focused = True;
 		self.entity_manager_        = entity_manager.EntityManager(self);
@@ -231,7 +231,7 @@ class Main:
 
 	def render_3D(self):
 		# ok liguei a lista criada na classe skybox que renderiza tudo.
-		#self.skybox.on_render();
+		self.skybox.on_render();
 
 		# Fovdase?
 		self.entity_manager_.on_render();
