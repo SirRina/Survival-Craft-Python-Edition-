@@ -1,40 +1,19 @@
 from OpenGL import GL as GL11;
 from api    import util;
 
+import pygame;
 import os;
 
-import pygame;
+# Mapeamos aqui as faces e suas respectivas sequencias.
+FACES = ["back", "down", "front", "left", "right", "up"];
 
 class Face:
 	def __init__(self, name):
 		self.name = name;
+		self.face = util.Vec(0, 0, 0);
 
-FACE_BACK  = 0x00;
-FACE_DOWN  = 0x01;
-FACE_FRONT = 0x02;
-FACE_LEFT  = 0x03;
-FACE_RIGHT = 0x04;
-FACE_UP    = 0x05;
-
-REQUEST_FACE = [
-	FACE_BACK, 
-	FACE_DOWN, 
-	FACE_FRONT,
-	FACE_LEFT, 
-	FACE_RIGHT,
-	FACE_UP
-];
-
-FACES = {
-	0x00 : Face("BACK"),
-	0x01 : Face("DOWN"),
-	0x02 : Face("FRONT"),
-	0x03 : Face("LEFT"),
-	0x04 : Face("RIGHT"),
-	0x05 : Face("UP")
-};
-
-# pedreiros constrem rodrig , mx .
+# eu sou transexual, eu irei me assumir, se voce esta lendo saiba que eu sou.
+# - Rina.
 class Block:
 	def __init__(self, name, current_path_textures = None):
 		self.name = name;
@@ -51,6 +30,7 @@ class Block:
 		self.aabb.max.z = 1;
 
 		self.textures = {};
+		self.faces    = {};
 
 		self.render_list = GL11.glGenLists(1);
 
@@ -58,12 +38,14 @@ class Block:
 		self.alpha        = 255;
 
 		if None != current_path_textures:
-			for faces in REQUEST_FACE:
-				face_name_requested = FACES[faces].name.lower();
+			for faces in FACES:
+				face = Face(faces);
 
-				path = os.path.join(os.path.abspath(current_path_textures + name + "_" + face_name_requested));
+				self.faces[faces] = face;
 
-				self.textures[face_name_requested] = util.convert_to_texture(pygame.image.load(path + ".png"));
+				path = os.path.join(os.path.abspath(current_path_textures + name + "_" + faces));
+
+				self.textures[faces] = util.convert_to_texture(pygame.image.load(path + ".png"));
 
 		GL11.glNewList(self.render_list, GL11.GL_COMPILE);
 		GL11.glColor(1, 1, 1);
@@ -151,8 +133,6 @@ class Block:
 		self.aabb.min.x = self.position.x;
 		self.aabb.min.y = self.position.y;
 		self.aabb.min.z = self.position.z;
-
-		print(self.aabb.min.x + self.aabb.max.x);
 
 		# aqui eu desenho a pora, o que e pora;
 		GL11.glPushMatrix();
