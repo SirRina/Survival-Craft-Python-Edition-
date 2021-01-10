@@ -5,8 +5,6 @@ from OpenGL import GL as GL11;
 import pygame;
 import os;
 
-import block;
-
 # filho de um anao
 class Skybox:
 	x = 0;
@@ -20,7 +18,7 @@ class Skybox:
 	def __init__(self, path):
 		self.textures = {};
 
-		for sides in block.FACES:
+		for sides in ["back", "down", "front", "left", "right", "up"]:
 			file_path = os.path.join(os.path.abspath(path + sides));
 
 			self.textures[sides] = util.convert_to_texture(pygame.image.load(file_path + ".png"));
