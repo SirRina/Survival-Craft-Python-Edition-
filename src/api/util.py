@@ -145,7 +145,6 @@ class CustomTextRender(object):
 		id = GL11.glGenTextures(1);
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, id);
 		
 		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST)

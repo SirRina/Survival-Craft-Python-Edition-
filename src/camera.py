@@ -61,6 +61,9 @@ class CameraManager:
 		self.y = y;
 		self.z = z;
 
+	def render_split(self):
+		pass
+
 	def update_camera(self):
 		GL11.glLoadIdentity();
 

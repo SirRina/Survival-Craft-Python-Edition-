@@ -98,7 +98,7 @@ class Main:
 		self.cancel_render_3D = False;
 
 		self.world = world.World(self);
-		self.world.load_chunk(1);
+		self.world.load_chunk(5, 1);
 
 		# Tem que cria o player.
 		self.player = entity.EntityPlayer("Player", "Player", "Ngga");
@@ -207,6 +207,18 @@ class Main:
 					self.entity_manager_.on_update_event(current_event);
 
 				if current_event.type == pygame.KEYDOWN:
+					if current_event.key == pygame.K_j:
+						try:
+							del self.world.chunk[0];
+						except:
+							pass
+
+					if current_event.key == pygame.K_l:
+						try:
+							self.world.chunk.append(self.world.chunk[0]);
+						except:
+							pass
+
 					try:
 						self.gui_manager.open(game_gui.KEYBIND_GUI[current_event.key]);
 					except:
@@ -237,6 +249,7 @@ class Main:
 		# Fovdase?
 		self.entity_manager_.on_render();
 		self.world.update_render_3d();
+		self.camera_manager.render_split();
 
 	def render_2D(self):
 		self.overlay_manager.on_render();

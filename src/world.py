@@ -11,16 +11,17 @@ class World:
 
 		self.chunk = [];
 
-	def load_chunk(self, size):
+	def load_chunk(self, size, length):
 		# Limpamos a chunk atual.
 		self.chunk.clear();
 
 		# Aqui vamos criar uns bloquinhos e bem simples mesmo, so para testar chunk.
-		for s in range(size):
-			_block = block.Block("dirty", "textures/blocks/");
-			_block.position.x, _block.position.y, _block.position.z = 1, 1, 1;
+		for x in range(size):
+			for z in range(size):
+				_block = block.Block("dirty", "textures/blocks/");
+				_block.position.x, _block.position.y, _block.position.z = x, length, z;
 
-			self.chunk.append(_block);
+				self.chunk.append(_block);
 
 	def implement_entity(self, _ent):
 		if entity.EntityPlayer == type(_ent):

@@ -136,7 +136,7 @@ class Block:
 
 		# aqui eu desenho a pora, o que e pora;
 		GL11.glPushMatrix();
-		GL11.glTranslate(self.aabb.min.x, self.aabb.min.y, self.aabb.min.z);
+		GL11.glTranslate(self.position.x, self.position.y, self.position.z);
 
 		if self.transparency:
 			GL11.glEnable(GL11.GL_BLEND);
